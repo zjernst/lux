@@ -44,8 +44,9 @@ Game.prototype.step = function () {
 };
 
 Game.prototype.hitWall = function (ctx, player) {
-  const imgData = ctx.getImageData(player.pos[0], player.pos[1],
-                                        player.radius * 2, player.radius * 2);
+  let x = player.pos[0] - player.radius;
+  let y = player.pos[1] - player.radius;
+  const imgData = ctx.getImageData(x, y, player.radius * 2, player.radius * 2);
   const pix = imgData.data;
   for (let i = 0; i < pix.length; i++) {
     if (pix[i] === 0) {
