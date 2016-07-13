@@ -19,6 +19,9 @@ Game.prototype.setup = function(ctx) {
     this.player.draw(ctx);
   }.bind(this)
   this.mazeImg.src = `maps/maze${this.maze}.gif`
+  window.addEventListener('mousemove', (e) => {
+    this.mouse = [e.clientX, e.clientY]
+  });
 };
 
 Game.prototype.draw = function(ctx) {
