@@ -5,6 +5,7 @@ function Game(dimX, dimY, maze=4) {
   this.dimY = dimY;
   this.dimX = dimX;
   let playerPos = [(dimX / 2), (dimY / 2)];
+  this.mouse = playerPos;
   this.player = new Player(playerPos, this);
   this.maze = maze;
   this.mazeImg = new Image ();
