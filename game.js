@@ -27,9 +27,9 @@ Game.prototype.setup = function(ctx) {
 Game.prototype.draw = function(ctx) {
   ctx.clearRect(0, 0, this.dimX, this.dimY);
   ctx.drawImage(this.mazeImg, 0, 0);
-  // if (this.hitWall(ctx, this.player)) {
-  //   this.player.moveBack();
-  // }
+  if (this.hitWall(ctx, this.player)) {
+    this.player.moveBack();
+  }
   this.player.draw(ctx);
 };
 
