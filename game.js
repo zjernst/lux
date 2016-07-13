@@ -1,4 +1,5 @@
 const Player = require('./player.js');
+// const Sight = require('./sight.js');
 
 function Game(dimX, dimY, maze=4) {
   this.dimY = dimY;
@@ -17,11 +18,7 @@ Game.prototype.setup = function(ctx) {
     ctx.drawImage(this.mazeImg, 0, 0);
     this.player.draw(ctx);
   }.bind(this)
-  // this.mazeImg.crossOrigin = "Anonymous";
   this.mazeImg.src = `maps/maze${this.maze}.gif`
-  // const url = `https://www.dropbox.com/s/5dzok4xaflu1a6g/maze4.gif?dl=0`;
-  // this.mazeImg.src = url + '?' + new Date().getTime();
-  // this.mazeImg.setAttribute('crossOrigin', '');
 };
 
 Game.prototype.draw = function(ctx) {
@@ -31,6 +28,25 @@ Game.prototype.draw = function(ctx) {
     this.player.moveBack();
   }
   this.player.draw(ctx);
+  this.sight(ctx);
+};
+
+Game.prototype.sight = function (ctx) {
+  let playerX = this.player.pos[0];
+  let playerY = this.player.pos[1];
+  let mouseX = this.mouse[0];
+  let mouseY = this.mouse[1];
+
+  ctx.beginPath();
+  ctx.save();
+  ctx.translate(playerX, playerY);
+  let angle = Math.atan2((playerY - mouseY), playerX - mouseX);
+  ctx.rotate(angle + Math.PI/1.33);
+  ctx.moveTo(0,0);
+  ctx.lineTo(200, 100);
+  ctx.lineTo(100, 200);
+  ctx.fill();
+  ctx.restore();
 };
 
 Game.prototype.moveObjects = function () {
