@@ -153,10 +153,10 @@
 	    this.player.draw(ctx);
 	  }.bind(this)
 	  // this.mazeImg.crossOrigin = "Anonymous";
-	  // this.mazeImg.src = `maps/maze${this.maze}.gif`
-	  const url = `https://www.dropbox.com/s/5dzok4xaflu1a6g/maze4.gif?dl=0`;
-	  this.mazeImg.src = url + '?' + new Date().getTime();
-	  this.mazeImg.setAttribute('crossOrigin', '');
+	  this.mazeImg.src = `maps/maze${this.maze}.gif`
+	  // const url = `https://www.dropbox.com/s/5dzok4xaflu1a6g/maze4.gif?dl=0`;
+	  // this.mazeImg.src = url + '?' + new Date().getTime();
+	  // this.mazeImg.setAttribute('crossOrigin', '');
 	};
 	
 	Game.prototype.draw = function(ctx) {
