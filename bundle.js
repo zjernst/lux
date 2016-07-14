@@ -182,6 +182,7 @@
 	    this.ghost = new Ghost (util.randomPos(), this);
 	    this.allObjects.push(this.ghost);
 	  }
+	  // this.vision = 300;
 	  this.exit = new Exit (this);
 	  this.sight = new Sight(this);
 	
@@ -224,7 +225,7 @@
 	  }
 	  this.player.draw(ctx);
 	  this.exit.draw(ctx);
-	  this.fog(ctx);
+	  this.fog(ctx, this.vision);
 	  this.sight.draw(ctx);
 	  if (this.ghost) {
 	    this.ghost.draw(ctx);
@@ -251,6 +252,7 @@
 	
 	Game.prototype.step = function () {
 	  this.moveObjects();
+	  // this.vision -= .01;
 	  this.win();
 	};
 	
@@ -298,6 +300,7 @@
 	  VEL = [0, 0]
 	  MovingObject.call(this, pos, VEL, RADIUS, COLOR, game);
 	  this.maxVel = 2;
+	  this.directing = false
 	};
 	
 	util.inherits(MovingObject, Player)
@@ -305,6 +308,7 @@
 	Player.prototype.direct = function(direction) {
 	  this.vel[0] += direction[0];
 	  this.vel[1] += direction[1];
+	  this.directing = true;
 	};
 	
 	Player.prototype.setMax = function (n) {
@@ -343,13 +347,14 @@
 	Player.prototype.move = function () {
 	  this.prevPos = this.pos;
 	  this.bounds(this.pos);
-	  this.decelerate();
 	  this.maxSpeed(this.maxVel);
-	  console.log(this.vel[0]);
-	  console.log(this.vel[1]);
 	
 	  this.pos[0] = this.pos[0] + this.vel[0];
 	  this.pos[1] = this.pos[1] + this.vel[1];
+	  if (this.directing === false) {
+	    this.decelerate();
+	  }
+	  this.directing = false;
 	};
 	
 	
@@ -745,10 +750,10 @@
 	        if (cell.getState() == "alive") {
 	          //console.log("it's alive!");
 	          if (colourful === true) {
-	            var r=Math.floor(Math.random()*10),
-	                g=Math.floor(Math.random()*10),
-	                b=Math.floor(Math.random()*10),
-	                a=(Math.floor(Math.random()*3)+8)/10; // rand between 0.5 and 1.0
+	            var r=Math.floor(Math.random()*20),
+	                g=Math.floor(Math.random()*40),
+	                b=Math.floor(Math.random()*20),
+	                a=(Math.floor(Math.random()*3)+9)/10; // rand between 0.5 and 1.0
 	            ctx.fillStyle = "rgba(" + r + "," + g + "," + b + "," + a + ")";
 	          }
 	          ctx.fillRect(start_x, start_y, cell_width, cell_height);

@@ -11,6 +11,7 @@ function Player(pos, game) {
   VEL = [0, 0]
   MovingObject.call(this, pos, VEL, RADIUS, COLOR, game);
   this.maxVel = 2;
+  this.directing = false
 };
 
 util.inherits(MovingObject, Player)
@@ -18,6 +19,7 @@ util.inherits(MovingObject, Player)
 Player.prototype.direct = function(direction) {
   this.vel[0] += direction[0];
   this.vel[1] += direction[1];
+  this.directing = true;
 };
 
 Player.prototype.setMax = function (n) {
@@ -56,13 +58,14 @@ Player.prototype.decelerate = function () {
 Player.prototype.move = function () {
   this.prevPos = this.pos;
   this.bounds(this.pos);
-  this.decelerate();
   this.maxSpeed(this.maxVel);
-  console.log(this.vel[0]);
-  console.log(this.vel[1]);
 
   this.pos[0] = this.pos[0] + this.vel[0];
   this.pos[1] = this.pos[1] + this.vel[1];
+  if (this.directing === false) {
+    this.decelerate();
+  }
+  this.directing = false;
 };
 
 

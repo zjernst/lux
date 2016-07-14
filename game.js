@@ -21,6 +21,7 @@ function Game(board, newGame, playerPos, ghosts) {
     this.ghost = new Ghost (util.randomPos(), this);
     this.allObjects.push(this.ghost);
   }
+  // this.vision = 300;
   this.exit = new Exit (this);
   this.sight = new Sight(this);
 
@@ -63,7 +64,7 @@ Game.prototype.draw = function(ctx) {
   }
   this.player.draw(ctx);
   this.exit.draw(ctx);
-  this.fog(ctx);
+  this.fog(ctx, this.vision);
   this.sight.draw(ctx);
   if (this.ghost) {
     this.ghost.draw(ctx);
@@ -90,6 +91,7 @@ Game.prototype.moveObjects = function () {
 
 Game.prototype.step = function () {
   this.moveObjects();
+  // this.vision -= .01;
   this.win();
 };
 

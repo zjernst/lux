@@ -192,10 +192,10 @@ var GameDisplay = function(num_cells_x, num_cells_y, cell_width, cell_height, ca
         if (cell.getState() == "alive") {
           //console.log("it's alive!");
           if (colourful === true) {
-            var r=Math.floor(Math.random()*10),
-                g=Math.floor(Math.random()*10),
-                b=Math.floor(Math.random()*10),
-                a=(Math.floor(Math.random()*3)+8)/10; // rand between 0.5 and 1.0
+            var r=Math.floor(Math.random()*20),
+                g=Math.floor(Math.random()*40),
+                b=Math.floor(Math.random()*20),
+                a=(Math.floor(Math.random()*3)+9)/10; // rand between 0.5 and 1.0
             ctx.fillStyle = "rgba(" + r + "," + g + "," + b + "," + a + ")";
           }
           ctx.fillRect(start_x, start_y, cell_width, cell_height);
