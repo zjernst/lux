@@ -62,17 +62,17 @@
 	
 	const el = document.getElementsByTagName('body')[0];
 	
-	const params = {
-	  canvas_id:    "world",
-	  cell_width:   20,
-	  cell_height:  20,
-	  init_cells:   util.randomStart(70, .2),
-	  colorful: true
-	}
+	// const params = {
+	//   canvas_id:    "world",
+	//   cell_width:   20,
+	//   cell_height:  20,
+	//   init_cells:   util.randomStart(70, .2),
+	//   colorful: true
+	// }
+	//
+	// const board = new GameOfLife(params)
 	
-	const board = new GameOfLife(params)
-	
-	gameView.start(ctx, board);
+	gameView.start();
 	
 	
 	
@@ -93,23 +93,35 @@
 
 	const Game = __webpack_require__(2);
 	const Player = window.Player = __webpack_require__(3);
+	const GameOfLife = __webpack_require__(7);
+	const Util = __webpack_require__(5);
+	const util = new Util();
 	
 	
 	function GameView(ctx) {
-	  // this.dimX = dimX;
-	  // this.dimY = dimY;
 	  this.ctx = ctx;
 	}
 	
-	GameView.prototype.start = function(ctx, board) {
-	  this.game = new Game(board);
-	  this.board = board
+	GameView.prototype.start = function(playerPos) {
+	  this.board = this.setBoard();
+	  this.game = new Game(this.board, this.start.bind(this), playerPos);
 	  this.player = this.game.player;
+	
+	  this.game.setup(this.ctx);
 	  this.keyHandlers();
 	
-	  this.game.setup(ctx);
-	
 	  requestAnimationFrame(this.animate.bind(this));
+	};
+	
+	GameView.prototype.setBoard = function (userParams) {
+	  const params = {
+	    canvas_id:    "world",
+	    cell_width:   20,
+	    cell_height:  20,
+	    init_cells:   util.randomStart(70, .2),
+	    colorful: true
+	  }
+	  return new GameOfLife(params)
 	};
 	
 	GameView.prototype.animate = function () {
@@ -150,12 +162,16 @@
 	const Player = __webpack_require__(3);
 	const Sight = __webpack_require__(6);
 	const Exit = __webpack_require__(8);
+	// const GameView = require('./game_view.js');
 	
-	function Game(board) {
+	function Game(board, newGame, playerPos) {
+	  this.newGame = newGame;
 	  this.dimY = window.innerHeight;
 	  this.dimX = window.innerWidth;
 	  this.board = board
-	  let playerPos = [(this.dimX / 2), (this.dimY / 2)];
+	
+	  playerPos = playerPos || [(this.dimX / 2), (this.dimY / 2)]
+	
 	  this.mouse = playerPos;
 	  this.player = new Player(playerPos, this);
 	  this.exit = new Exit (this);
@@ -243,9 +259,20 @@
 	    (this.player.pos[0] < this.exit.pos[0] + 40)) &&
 	   ((this.player.pos[1] > this.exit.pos[1]) &&
 	    (this.player.pos[1] < this.exit.pos[1] + 40))) {
-	      window.alert("YOU FOUND THE EXIT")
+	      this.player.vel = [0, 0];
+	      this.newGame(this.player.pos);
 	    }
 	};
+	
+	// Game.prototype.newGame = function () {
+	//   const canvasEl = document.getElementById("world");
+	//   canvasEl.height = window.innerHeight;
+	//   canvasEl.width = window.innerWidth;
+	//   const ctx = canvasEl.getContext('2d');
+	//
+	//   const new = GameView.new(ctx);
+	//   newGame.start();
+	// };
 	
 	module.exports = Game;
 
@@ -263,6 +290,9 @@
 	let VEL = [0,0];
 	
 	function Player(pos, game) {
+	  console.log(VEL)
+	  VEL = [0, 0]
+	  console.log(VEL)
 	  MovingObject.call(this, pos, VEL, RADIUS, COLOR, game);
 	};
 	
@@ -271,6 +301,22 @@
 	Player.prototype.direct = function(direction) {
 	  this.vel[0] += direction[0];
 	  this.vel[1] += direction[1];
+	  this.maxSpeed();
+	};
+	
+	Player.prototype.maxSpeed = function () {
+	  if (this.vel[0] > 2) {
+	    this.vel[0] = 2
+	  }
+	  if (this.vel[0] < -2) {
+	    this.vel[0] = -2
+	  }
+	  if (this.vel[1] > 2) {
+	    this.vel[1] = 2
+	  }
+	  if (this.vel[1] < -2) {
+	    this.vel[1] = -2
+	  }
 	};
 	
 	
@@ -312,6 +358,7 @@
 	
 	MovingObject.prototype.move = function () {
 	  this.prevPos = this.pos;
+	  this.bounds(this.pos);
 	  this.decelerate();
 	
 	  this.pos[0] = this.pos[0] + this.vel[0];
@@ -337,7 +384,48 @@
 	  this.pos[1] = this.prevPos[1];
 	  this.vel[0] = 0;
 	  this.vel[1] = 0;
-	}
+	};
+	
+	MovingObject.prototype.bounds = function(pos) {
+	  let checkOutOfBounds = this.checkOutOfBounds(pos);
+	
+	  if (checkOutOfBounds){
+	    if (checkOutOfBounds["coord"] === "X"){
+	
+	      if (checkOutOfBounds["low"]){
+	        if (this.vel[0] < 0)  {this.vel[0] *= (-.5)}
+	      } else {
+	        if (this.vel[0] > 0)  {this.vel[0] *= (-.5)}
+	      }
+	
+	    } else if (checkOutOfBounds["coord"] === "Y"){
+	
+	      if (checkOutOfBounds["low"]){
+	        if (this.vel[1] < 0)  {this.vel[1] *= (-.5)}
+	      } else {
+	        if (this.vel[1] > 0)  {this.vel[1] *= (-.5)}
+	      }
+	
+	    }
+	  }
+	};
+	
+	MovingObject.prototype.checkOutOfBounds = function (pos) {
+	
+	  if ((pos[0]-this.radius) <= 0 ) {
+	    return {coord: "X", low: true}
+	
+	  } else if ((pos[0]+this.radius) >= this.game.dimX) {
+	    return {coord: "X", low: false}
+	
+	  } else if ((pos[1]-this.radius) <= 0) {
+	    return {coord: "Y", low: true}
+	
+	  } else if ((pos[1]+this.radius) >= this.game.dimY) {
+	    return {coord: "Y", low: false}
+	  }
+	};
+	
 	
 	module.exports = MovingObject;
 

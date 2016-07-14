@@ -27,6 +27,7 @@ MovingObject.prototype.draw = function (ctx) {
 
 MovingObject.prototype.move = function () {
   this.prevPos = this.pos;
+  this.bounds(this.pos);
   this.decelerate();
 
   this.pos[0] = this.pos[0] + this.vel[0];
@@ -52,6 +53,47 @@ MovingObject.prototype.moveBack = function () {
   this.pos[1] = this.prevPos[1];
   this.vel[0] = 0;
   this.vel[1] = 0;
-}
+};
+
+MovingObject.prototype.bounds = function(pos) {
+  let checkOutOfBounds = this.checkOutOfBounds(pos);
+
+  if (checkOutOfBounds){
+    if (checkOutOfBounds["coord"] === "X"){
+
+      if (checkOutOfBounds["low"]){
+        if (this.vel[0] < 0)  {this.vel[0] *= (-.5)}
+      } else {
+        if (this.vel[0] > 0)  {this.vel[0] *= (-.5)}
+      }
+
+    } else if (checkOutOfBounds["coord"] === "Y"){
+
+      if (checkOutOfBounds["low"]){
+        if (this.vel[1] < 0)  {this.vel[1] *= (-.5)}
+      } else {
+        if (this.vel[1] > 0)  {this.vel[1] *= (-.5)}
+      }
+
+    }
+  }
+};
+
+MovingObject.prototype.checkOutOfBounds = function (pos) {
+
+  if ((pos[0]-this.radius) <= 0 ) {
+    return {coord: "X", low: true}
+
+  } else if ((pos[0]+this.radius) >= this.game.dimX) {
+    return {coord: "X", low: false}
+
+  } else if ((pos[1]-this.radius) <= 0) {
+    return {coord: "Y", low: true}
+
+  } else if ((pos[1]+this.radius) >= this.game.dimY) {
+    return {coord: "Y", low: false}
+  }
+};
+
 
 module.exports = MovingObject;

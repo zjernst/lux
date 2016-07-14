@@ -1,22 +1,34 @@
 const Game = require('./game.js');
 const Player = window.Player = require('./player.js');
+const GameOfLife = require('./gameOfLife.js');
+const Util = require('./util.js');
+const util = new Util();
 
 
 function GameView(ctx) {
-  // this.dimX = dimX;
-  // this.dimY = dimY;
   this.ctx = ctx;
 }
 
-GameView.prototype.start = function(ctx, board) {
-  this.game = new Game(board);
-  this.board = board
+GameView.prototype.start = function(playerPos) {
+  this.board = this.setBoard();
+  this.game = new Game(this.board, this.start.bind(this), playerPos);
   this.player = this.game.player;
+
+  this.game.setup(this.ctx);
   this.keyHandlers();
 
-  this.game.setup(ctx);
-
   requestAnimationFrame(this.animate.bind(this));
+};
+
+GameView.prototype.setBoard = function (userParams) {
+  const params = {
+    canvas_id:    "world",
+    cell_width:   20,
+    cell_height:  20,
+    init_cells:   util.randomStart(70, .2),
+    colorful: true
+  }
+  return new GameOfLife(params)
 };
 
 GameView.prototype.animate = function () {

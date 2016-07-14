@@ -1,12 +1,16 @@
 const Player = require('./player.js');
 const Sight = require('./sight.js');
 const Exit = require('./exit.js');
+// const GameView = require('./game_view.js');
 
-function Game(board) {
+function Game(board, newGame, playerPos) {
+  this.newGame = newGame;
   this.dimY = window.innerHeight;
   this.dimX = window.innerWidth;
   this.board = board
-  let playerPos = [(this.dimX / 2), (this.dimY / 2)];
+
+  playerPos = playerPos || [(this.dimX / 2), (this.dimY / 2)]
+
   this.mouse = playerPos;
   this.player = new Player(playerPos, this);
   this.exit = new Exit (this);
@@ -94,8 +98,19 @@ Game.prototype.win = function() {
     (this.player.pos[0] < this.exit.pos[0] + 40)) &&
    ((this.player.pos[1] > this.exit.pos[1]) &&
     (this.player.pos[1] < this.exit.pos[1] + 40))) {
-      window.alert("YOU FOUND THE EXIT")
+      this.player.vel = [0, 0];
+      this.newGame(this.player.pos);
     }
 };
+
+// Game.prototype.newGame = function () {
+//   const canvasEl = document.getElementById("world");
+//   canvasEl.height = window.innerHeight;
+//   canvasEl.width = window.innerWidth;
+//   const ctx = canvasEl.getContext('2d');
+//
+//   const new = GameView.new(ctx);
+//   newGame.start();
+// };
 
 module.exports = Game;

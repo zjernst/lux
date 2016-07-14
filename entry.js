@@ -16,17 +16,17 @@ const gameView = new GameView(ctx);
 
 const el = document.getElementsByTagName('body')[0];
 
-const params = {
-  canvas_id:    "world",
-  cell_width:   20,
-  cell_height:  20,
-  init_cells:   util.randomStart(70, .2),
-  colorful: true
-}
+// const params = {
+//   canvas_id:    "world",
+//   cell_width:   20,
+//   cell_height:  20,
+//   init_cells:   util.randomStart(70, .2),
+//   colorful: true
+// }
+//
+// const board = new GameOfLife(params)
 
-const board = new GameOfLife(params)
-
-gameView.start(ctx, board);
+gameView.start();
 
 
 
