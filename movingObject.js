@@ -27,7 +27,13 @@ MovingObject.prototype.draw = function (ctx) {
 
 MovingObject.prototype.move = function () {
   this.prevPos = this.pos;
+  this.decelerate();
 
+  this.pos[0] = this.pos[0] + this.vel[0];
+  this.pos[1] = this.pos[1] + this.vel[1];
+};
+
+MovingObject.prototype.decelerate = function () {
   if (this.vel[0] > 0) {
     this.vel[0] -= .01
   } else if (this.vel[0] < 0) {
@@ -39,9 +45,6 @@ MovingObject.prototype.move = function () {
   } else if (this.vel[1] < 0) {
     this.vel[1] += .01
   }
-  
-  this.pos[0] = this.pos[0] + this.vel[0];
-  this.pos[1] = this.pos[1] + this.vel[1];
 };
 
 MovingObject.prototype.moveBack = function () {

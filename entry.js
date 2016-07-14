@@ -1,4 +1,7 @@
 const GameView = window.GameView = require('./gameView.js');
+const GameOfLife = window.GameOfLife = require('./gameOfLife.js');
+const Util = require('./util');
+const util = new Util ();
 // const mazeWidth = 482;
 // const mazeHeight = 482;
 
@@ -13,7 +16,17 @@ const gameView = new GameView(ctx);
 
 const el = document.getElementsByTagName('body')[0];
 
-gameView.start(ctx);
+const params = {
+  canvas_id:    "world",
+  cell_width:   20,
+  cell_height:  20,
+  init_cells:   util.randomStart(70, .2),
+  colorful: true
+}
+
+const board = new GameOfLife(params)
+
+gameView.start(ctx, board);
 
 
 

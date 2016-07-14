@@ -8,8 +8,9 @@ function GameView(ctx) {
   this.ctx = ctx;
 }
 
-GameView.prototype.start = function(ctx) {
-  this.game = new Game();
+GameView.prototype.start = function(ctx, board) {
+  this.game = new Game(board);
+  this.board = board
   this.player = this.game.player;
   this.keyHandlers();
 

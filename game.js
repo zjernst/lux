@@ -1,14 +1,15 @@
 const Player = require('./player.js');
 const Sight = require('./sight.js');
+const Exit = require('./exit.js');
 
-function Game(maze=4) {
+function Game(board) {
   this.dimY = window.innerHeight;
   this.dimX = window.innerWidth;
+  this.board = board
   let playerPos = [(this.dimX / 2), (this.dimY / 2)];
   this.mouse = playerPos;
   this.player = new Player(playerPos, this);
-  this.maze = maze;
-  this.mazeImg = new Image ();
+  this.exit = new Exit (this);
   this.sight = new Sight(this);
 
   this.allObjects = [this.player];
@@ -16,27 +17,53 @@ function Game(maze=4) {
 
 Game.prototype.setup = function(ctx) {
   ctx.clearRect(0, 0, this.dimX, this.dimY);
-  this.mazeImg.onload = function () {
-    ctx.drawImage(this.mazeImg, 0, 0);
-    this.player.draw(ctx);
-  }.bind(this)
-  this.mazeImg.src = `maps/maze${this.maze}.gif`
+  this.board.render();
+  this.player.draw(ctx);
+  this.exit.draw(ctx);
   window.addEventListener('mousemove', (e) => {
     this.mouse = [e.clientX, e.clientY]
   });
+  this.boardSetup();
+};
+
+Game.prototype.boardSetup = function() {
+  for (var i = 0; i < 10; i++) {
+    this.board.step();
+  }
+  this.interval = setInterval(() => {
+    this.stepping = true;
+  }, 10000)
 };
 
 Game.prototype.draw = function(ctx) {
   ctx.clearRect(0, 0, this.dimX, this.dimY);
-  ctx.drawImage(this.mazeImg, 0, 0);
+  if (this.stepping) {
+    this.board.step();
+    this.stepping = false;
+  } else {
+    this.board.render();
+  }
+
   if (this.hitWall(ctx, this.player)) {
     this.player.moveBack();
   }
+  this.fog(ctx);
   this.player.draw(ctx);
+  this.exit.draw(ctx);
   this.sight.draw(ctx);
 };
 
-
+Game.prototype.fog = function (ctx) {
+  let pX = this.player.pos[0];
+  let pY = this.player.pos[1];
+  let gradient = ctx.createRadialGradient(pX, pY, 100, pX, pY, 500);
+  gradient.addColorStop(0, "rgba(0,0,0,0)");
+  gradient.addColorStop(1, "rgba(0,0,0,1)");
+  ctx.save();
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0,0,this.dimX,this.dimY)
+  ctx.restore();
+};
 
 Game.prototype.moveObjects = function () {
   this.allObjects.forEach((object) => {
@@ -46,29 +73,29 @@ Game.prototype.moveObjects = function () {
 
 Game.prototype.step = function () {
   this.moveObjects();
+  this.win();
 };
 
 Game.prototype.hitWall = function (ctx, player) {
-  let x = player.pos[0] - player.radius;
-  let y = player.pos[1] - player.radius;
-  const imgData = ctx.getImageData(x, y, player.radius * 2, player.radius * 2);
+  let x = player.pos[0] - player.radius/2;
+  let y = player.pos[1] - player.radius/2;
+  const imgData = ctx.getImageData(x, y, player.radius, player.radius);
   const pix = imgData.data;
   for (let i = 0; i < pix.length; i++) {
-    if (pix[i] === 0) {
+    if (pix[i] !== 0) {
       return true
     }
   }
   return false
 };
 
-// function drawMaze() {
-//   // makeWhite(0, 0, canvas.width, canvas.height);
-//   const mazeImg = new Image ();
-//   mazeImg.onload = function () {
-//     ctx.drawImage(mazeImg, 0, 0);
-//   };
-//   let maze = 4
-//   mazeImg.src = `./maps/maze${maze}.gif`;
-// }
+Game.prototype.win = function() {
+  if (((this.player.pos[0] > this.exit.pos[0]) &&
+    (this.player.pos[0] < this.exit.pos[0] + 40)) &&
+   ((this.player.pos[1] > this.exit.pos[1]) &&
+    (this.player.pos[1] < this.exit.pos[1] + 40))) {
+      window.alert("YOU FOUND THE EXIT")
+    }
+};
 
 module.exports = Game;

@@ -21,10 +21,10 @@ Sight.prototype.draw = function (ctx) {
   ctx.translate(playerX, playerY);
   let angle = Math.atan2((playerY - mouseY), playerX - mouseX);
   ctx.rotate(angle + Math.PI/1.33);
-  ctx.moveTo(0,0);
-  ctx.lineTo(300, 100);
-  ctx.lineTo(100, 300);
-  ctx.lineTo(0,0);
+  ctx.moveTo(-20,-20);
+  ctx.lineTo(250, 100);
+  ctx.lineTo(100, 250);
+  ctx.lineTo(-20,-20);
   ctx.fill();
   ctx.restore();
 };
