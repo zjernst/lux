@@ -106,14 +106,14 @@
 	};
 	
 	GameView.MOVES = {
-	  "w": [ 0, -.2],
-	  "a": [-.2,  0],
-	  "s": [ 0,  .2],
-	  "d": [ .2,  0],
-	  "up": [ 0, -.2],
-	  "left": [-.2,  0],
-	  "right": [ .2,  0],
-	  "down": [ 0,  .2]
+	  "w": [ 0, -.5],
+	  "a": [-.5,  0],
+	  "s": [ 0,  .5],
+	  "d": [ .5,  0],
+	  "up": [ 0, -.5],
+	  "left": [-.5,  0],
+	  "right": [ .5,  0],
+	  "down": [ 0,  .5]
 	};
 	
 	GameView.prototype.keyHandlers = function() {
@@ -270,7 +270,20 @@
 	};
 	
 	MovingObject.prototype.move = function () {
-	  this.prevPos = this.pos
+	  this.prevPos = this.pos;
+	
+	  if (this.vel[0] > 0) {
+	    this.vel[0] -= .01
+	  } else if (this.vel[0] < 0) {
+	    this.vel[0] += .01
+	  }
+	
+	  if (this.vel[1] > 0) {
+	    this.vel[1] -= .01
+	  } else if (this.vel[1] < 0) {
+	    this.vel[1] += .01
+	  }
+	  
 	  this.pos[0] = this.pos[0] + this.vel[0];
 	  this.pos[1] = this.pos[1] + this.vel[1];
 	};

@@ -26,14 +26,14 @@ GameView.prototype.animate = function () {
 };
 
 GameView.MOVES = {
-  "w": [ 0, -.2],
-  "a": [-.2,  0],
-  "s": [ 0,  .2],
-  "d": [ .2,  0],
-  "up": [ 0, -.2],
-  "left": [-.2,  0],
-  "right": [ .2,  0],
-  "down": [ 0,  .2]
+  "w": [ 0, -.5],
+  "a": [-.5,  0],
+  "s": [ 0,  .5],
+  "d": [ .5,  0],
+  "up": [ 0, -.5],
+  "left": [-.5,  0],
+  "right": [ .5,  0],
+  "down": [ 0,  .5]
 };
 
 GameView.prototype.keyHandlers = function() {
