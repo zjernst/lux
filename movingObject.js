@@ -28,7 +28,10 @@ MovingObject.prototype.draw = function (ctx) {
 MovingObject.prototype.move = function () {
   this.prevPos = this.pos;
   this.bounds(this.pos);
-  this.decelerate();
+
+  if (this.constructor === 'Player') {
+    this.decelerate();
+  }
 
   this.pos[0] = this.pos[0] + this.vel[0];
   this.pos[1] = this.pos[1] + this.vel[1];

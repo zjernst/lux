@@ -118,7 +118,7 @@
 	    canvas_id:    "world",
 	    cell_width:   20,
 	    cell_height:  20,
-	    init_cells:   util.randomStart(70, .2),
+	    init_cells:   util.randomStart(window.innerWidth, window.innerHeight, .2),
 	    colorful: true
 	  }
 	  return new GameOfLife(params)
@@ -162,6 +162,9 @@
 	const Player = __webpack_require__(3);
 	const Sight = __webpack_require__(6);
 	const Exit = __webpack_require__(8);
+	const Ghost = __webpack_require__(9);
+	const Util = __webpack_require__(5);
+	const util = new Util();
 	// const GameView = require('./game_view.js');
 	
 	function Game(board, newGame, playerPos) {
@@ -174,10 +177,11 @@
 	
 	  this.mouse = playerPos;
 	  this.player = new Player(playerPos, this);
+	  this.ghost = new Ghost (util.randomPos(), this);
 	  this.exit = new Exit (this);
 	  this.sight = new Sight(this);
 	
-	  this.allObjects = [this.player];
+	  this.allObjects = [this.player, this.ghost];
 	};
 	
 	Game.prototype.setup = function(ctx) {
@@ -216,6 +220,7 @@
 	  this.player.draw(ctx);
 	  this.exit.draw(ctx);
 	  this.sight.draw(ctx);
+	  this.ghost.draw(ctx);
 	};
 	
 	Game.prototype.fog = function (ctx) {
@@ -264,15 +269,6 @@
 	    }
 	};
 	
-	// Game.prototype.newGame = function () {
-	//   const canvasEl = document.getElementById("world");
-	//   canvasEl.height = window.innerHeight;
-	//   canvasEl.width = window.innerWidth;
-	//   const ctx = canvasEl.getContext('2d');
-	//
-	//   const new = GameView.new(ctx);
-	//   newGame.start();
-	// };
 	
 	module.exports = Game;
 
@@ -359,7 +355,10 @@
 	MovingObject.prototype.move = function () {
 	  this.prevPos = this.pos;
 	  this.bounds(this.pos);
-	  this.decelerate();
+	
+	  if (this.constructor === 'Player') {
+	    this.decelerate();
+	  }
 	
 	  this.pos[0] = this.pos[0] + this.vel[0];
 	  this.pos[1] = this.pos[1] + this.vel[1];
@@ -444,10 +443,18 @@
 	  Child.prototype.constructor = Child;
 	};
 	
-	Util.prototype.randomStart = function(size, weight) {
-	  const board = new Array(size);
+	Util.prototype.randomPos = function() {
+	  const width = window.innerWidth * Math.random();
+	  const height = window.innerHeight * Math.random();
+	  return [width, height];
+	};
+	
+	Util.prototype.randomStart = function(windowWidth, windowHeight, weight) {
+	  const width = Math.floor(windowWidth/20);
+	  const height = Math.floor(windowHeight/20);
+	  const board = new Array(height);
 	  for (let i = 0; i < board.length; i++) {
-	    board[i] = new Array(size);
+	    board[i] = new Array(width);
 	  }
 	  for (let j = 0; j < board.length; j++) {
 	    for (let k = 0; k < board[0].length; k++) {
@@ -777,6 +784,45 @@
 	};
 	
 	module.exports = Exit;
+
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	const MovingObject = __webpack_require__(4);
+	const Util = __webpack_require__(5);
+	const util = new Util();
+	
+	const COLOR = "#ccffff";
+	let RADIUS = 20;
+	let VEL = [0,0];
+	
+	function Ghost(pos, game) {
+	  MovingObject.call(this, pos, VEL, RADIUS, COLOR, game);
+	};
+	
+	util.inherits(MovingObject, Ghost)
+	
+	Ghost.prototype.findPlayer = function () {
+	  return player = this.game.player.pos
+	};
+	
+	Ghost.prototype.direct = function() {
+	  let player = this.findPlayer();
+	  console.log(player)
+	  let angle = Math.atan2((player[1] - this.pos[1]), player[0] - this.pos[0]);
+	  VEL[0] = Math.cos(angle)/2;
+	  VEL[1] = Math.sin(angle)/2;
+	};
+	
+	Ghost.prototype.move = function () {
+	  this.direct();
+	  this.pos[0] = this.pos[0] + VEL[0];
+	  this.pos[1] = this.pos[1] + VEL[1];
+	};
+	
+	module.exports = Ghost;
 
 
 /***/ }

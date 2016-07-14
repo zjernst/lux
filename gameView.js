@@ -25,7 +25,7 @@ GameView.prototype.setBoard = function (userParams) {
     canvas_id:    "world",
     cell_width:   20,
     cell_height:  20,
-    init_cells:   util.randomStart(70, .2),
+    init_cells:   util.randomStart(window.innerWidth, window.innerHeight, .2),
     colorful: true
   }
   return new GameOfLife(params)

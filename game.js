@@ -1,6 +1,9 @@
 const Player = require('./player.js');
 const Sight = require('./sight.js');
 const Exit = require('./exit.js');
+const Ghost = require('./ghost.js');
+const Util = require('./util.js');
+const util = new Util();
 // const GameView = require('./game_view.js');
 
 function Game(board, newGame, playerPos) {
@@ -13,10 +16,11 @@ function Game(board, newGame, playerPos) {
 
   this.mouse = playerPos;
   this.player = new Player(playerPos, this);
+  this.ghost = new Ghost (util.randomPos(), this);
   this.exit = new Exit (this);
   this.sight = new Sight(this);
 
-  this.allObjects = [this.player];
+  this.allObjects = [this.player, this.ghost];
 };
 
 Game.prototype.setup = function(ctx) {
@@ -55,6 +59,7 @@ Game.prototype.draw = function(ctx) {
   this.player.draw(ctx);
   this.exit.draw(ctx);
   this.sight.draw(ctx);
+  this.ghost.draw(ctx);
 };
 
 Game.prototype.fog = function (ctx) {
@@ -103,14 +108,5 @@ Game.prototype.win = function() {
     }
 };
 
-// Game.prototype.newGame = function () {
-//   const canvasEl = document.getElementById("world");
-//   canvasEl.height = window.innerHeight;
-//   canvasEl.width = window.innerWidth;
-//   const ctx = canvasEl.getContext('2d');
-//
-//   const new = GameView.new(ctx);
-//   newGame.start();
-// };
 
 module.exports = Game;
