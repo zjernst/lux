@@ -53,7 +53,7 @@ Game.prototype.draw = function(ctx) {
   }
 
   if (this.hitWall(ctx, this.player)) {
-    this.player.setMax(.25);
+    this.player.setMax(.4);
     console.log(this.player.maxVel);
   } else {
     this.player.setMax(2);
