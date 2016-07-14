@@ -22,8 +22,8 @@ Sight.prototype.draw = function (ctx) {
   let angle = Math.atan2((playerY - mouseY), playerX - mouseX);
   ctx.rotate(angle + Math.PI/1.33);
   ctx.moveTo(-20,-20);
-  ctx.lineTo(250, 100);
-  ctx.lineTo(100, 250);
+  ctx.lineTo(500, 200);
+  ctx.lineTo(200, 500);
   ctx.lineTo(-20,-20);
   ctx.fill();
   ctx.restore();

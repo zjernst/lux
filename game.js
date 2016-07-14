@@ -61,9 +61,9 @@ Game.prototype.draw = function(ctx) {
   } else {
     this.player.setMax(2);
   }
-  this.fog(ctx);
   this.player.draw(ctx);
   this.exit.draw(ctx);
+  this.fog(ctx);
   this.sight.draw(ctx);
   if (this.ghost) {
     this.ghost.draw(ctx);
@@ -73,7 +73,7 @@ Game.prototype.draw = function(ctx) {
 Game.prototype.fog = function (ctx) {
   let pX = this.player.pos[0];
   let pY = this.player.pos[1];
-  let gradient = ctx.createRadialGradient(pX, pY, 100, pX, pY, 500);
+  let gradient = ctx.createRadialGradient(pX, pY, 150, pX, pY, 300);
   gradient.addColorStop(0, "rgba(0,0,0,0)");
   gradient.addColorStop(1, "rgba(0,0,0,1)");
   ctx.save();

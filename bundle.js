@@ -222,9 +222,9 @@
 	  } else {
 	    this.player.setMax(2);
 	  }
-	  this.fog(ctx);
 	  this.player.draw(ctx);
 	  this.exit.draw(ctx);
+	  this.fog(ctx);
 	  this.sight.draw(ctx);
 	  if (this.ghost) {
 	    this.ghost.draw(ctx);
@@ -234,7 +234,7 @@
 	Game.prototype.fog = function (ctx) {
 	  let pX = this.player.pos[0];
 	  let pY = this.player.pos[1];
-	  let gradient = ctx.createRadialGradient(pX, pY, 100, pX, pY, 500);
+	  let gradient = ctx.createRadialGradient(pX, pY, 150, pX, pY, 300);
 	  gradient.addColorStop(0, "rgba(0,0,0,0)");
 	  gradient.addColorStop(1, "rgba(0,0,0,1)");
 	  ctx.save();
@@ -537,8 +537,8 @@
 	  let angle = Math.atan2((playerY - mouseY), playerX - mouseX);
 	  ctx.rotate(angle + Math.PI/1.33);
 	  ctx.moveTo(-20,-20);
-	  ctx.lineTo(250, 100);
-	  ctx.lineTo(100, 250);
+	  ctx.lineTo(500, 200);
+	  ctx.lineTo(200, 500);
 	  ctx.lineTo(-20,-20);
 	  ctx.fill();
 	  ctx.restore();
