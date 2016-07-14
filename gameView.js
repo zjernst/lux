@@ -2,14 +2,14 @@ const Game = require('./game.js');
 const Player = window.Player = require('./player.js');
 
 
-function GameView(dimX, dimY, ctx) {
-  this.dimX = dimX;
-  this.dimY = dimY;
+function GameView(ctx) {
+  // this.dimX = dimX;
+  // this.dimY = dimY;
   this.ctx = ctx;
 }
 
 GameView.prototype.start = function(ctx) {
-  this.game = new Game(this.dimX, this.dimY);
+  this.game = new Game();
   this.player = this.game.player;
   this.keyHandlers();
 

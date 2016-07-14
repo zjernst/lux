@@ -1,14 +1,15 @@
 const Player = require('./player.js');
-// const Sight = require('./sight.js');
+const Sight = require('./sight.js');
 
-function Game(dimX, dimY, maze=4) {
-  this.dimY = dimY;
-  this.dimX = dimX;
-  let playerPos = [(dimX / 2), (dimY / 2)];
+function Game(maze=4) {
+  this.dimY = window.innerHeight;
+  this.dimX = window.innerWidth;
+  let playerPos = [(this.dimX / 2), (this.dimY / 2)];
   this.mouse = playerPos;
   this.player = new Player(playerPos, this);
   this.maze = maze;
   this.mazeImg = new Image ();
+  this.sight = new Sight(this);
 
   this.allObjects = [this.player];
 };
@@ -32,26 +33,10 @@ Game.prototype.draw = function(ctx) {
     this.player.moveBack();
   }
   this.player.draw(ctx);
-  this.sight(ctx);
+  this.sight.draw(ctx);
 };
 
-Game.prototype.sight = function (ctx) {
-  let playerX = this.player.pos[0];
-  let playerY = this.player.pos[1];
-  let mouseX = this.mouse[0];
-  let mouseY = this.mouse[1];
 
-  ctx.beginPath();
-  ctx.save();
-  ctx.translate(playerX, playerY);
-  let angle = Math.atan2((playerY - mouseY), playerX - mouseX);
-  ctx.rotate(angle + Math.PI/1.33);
-  ctx.moveTo(0,0);
-  ctx.lineTo(200, 100);
-  ctx.lineTo(100, 200);
-  ctx.fill();
-  ctx.restore();
-};
 
 Game.prototype.moveObjects = function () {
   this.allObjects.forEach((object) => {

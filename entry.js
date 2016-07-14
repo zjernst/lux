@@ -9,7 +9,7 @@ canvasEl.height = window.innerHeight;
 canvasEl.width = window.innerWidth;
 
 const ctx = canvasEl.getContext('2d');
-const gameView = new GameView(canvasEl.height, canvasEl.width, ctx);
+const gameView = new GameView(ctx);
 
 const el = document.getElementsByTagName('body')[0];
 

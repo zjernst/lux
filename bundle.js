@@ -55,7 +55,7 @@
 	canvasEl.width = window.innerWidth;
 	
 	const ctx = canvasEl.getContext('2d');
-	const gameView = new GameView(canvasEl.height, canvasEl.width, ctx);
+	const gameView = new GameView(ctx);
 	
 	const el = document.getElementsByTagName('body')[0];
 	
@@ -82,14 +82,14 @@
 	const Player = window.Player = __webpack_require__(3);
 	
 	
-	function GameView(dimX, dimY, ctx) {
-	  this.dimX = dimX;
-	  this.dimY = dimY;
+	function GameView(ctx) {
+	  // this.dimX = dimX;
+	  // this.dimY = dimY;
 	  this.ctx = ctx;
 	}
 	
 	GameView.prototype.start = function(ctx) {
-	  this.game = new Game(this.dimX, this.dimY);
+	  this.game = new Game();
 	  this.player = this.game.player;
 	  this.keyHandlers();
 	
@@ -134,16 +134,17 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	const Player = __webpack_require__(3);
-	// const Sight = require('./sight.js');
+	const Sight = __webpack_require__(6);
 	
-	function Game(dimX, dimY, maze=4) {
-	  this.dimY = dimY;
-	  this.dimX = dimX;
-	  let playerPos = [(dimX / 2), (dimY / 2)];
+	function Game(maze=4) {
+	  this.dimY = window.innerHeight;
+	  this.dimX = window.innerWidth;
+	  let playerPos = [(this.dimX / 2), (this.dimY / 2)];
 	  this.mouse = playerPos;
 	  this.player = new Player(playerPos, this);
 	  this.maze = maze;
 	  this.mazeImg = new Image ();
+	  this.sight = new Sight(this);
 	
 	  this.allObjects = [this.player];
 	};
@@ -167,26 +168,10 @@
 	    this.player.moveBack();
 	  }
 	  this.player.draw(ctx);
-	  this.sight(ctx);
+	  this.sight.draw(ctx);
 	};
 	
-	Game.prototype.sight = function (ctx) {
-	  let playerX = this.player.pos[0];
-	  let playerY = this.player.pos[1];
-	  let mouseX = this.mouse[0];
-	  let mouseY = this.mouse[1];
 	
-	  ctx.beginPath();
-	  ctx.save();
-	  ctx.translate(playerX, playerY);
-	  let angle = Math.atan2((playerY - mouseY), playerX - mouseX);
-	  ctx.rotate(angle + Math.PI/1.33);
-	  ctx.moveTo(0,0);
-	  ctx.lineTo(200, 100);
-	  ctx.lineTo(100, 200);
-	  ctx.fill();
-	  ctx.restore();
-	};
 	
 	Game.prototype.moveObjects = function () {
 	  this.allObjects.forEach((object) => {
@@ -315,6 +300,44 @@
 	};
 	
 	module.exports = Util;
+
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	
+	function Sight(game) {
+	  this.game = game;
+	}
+	
+	Sight.prototype.draw = function (ctx) {
+	  ctx.fillStyle = 'black';
+	  ctx.beginPath();
+	  ctx.moveTo(0,0);
+	  ctx.lineTo(0, this.game.dimY);
+	  ctx.lineTo(this.game.dimX, this.game.dimY);
+	  ctx.lineTo(this.game.dimX, 0);
+	  ctx.lineTo(0,0);
+	
+	  let playerX = this.game.player.pos[0];
+	  let playerY = this.game.player.pos[1];
+	  let mouseX = this.game.mouse[0];
+	  let mouseY = this.game.mouse[1];
+	
+	  ctx.save();
+	  ctx.translate(playerX, playerY);
+	  let angle = Math.atan2((playerY - mouseY), playerX - mouseX);
+	  ctx.rotate(angle + Math.PI/1.33);
+	  ctx.moveTo(0,0);
+	  ctx.lineTo(300, 100);
+	  ctx.lineTo(100, 300);
+	  ctx.lineTo(0,0);
+	  ctx.fill();
+	  ctx.restore();
+	};
+	
+	module.exports = Sight;
 
 
 /***/ }
