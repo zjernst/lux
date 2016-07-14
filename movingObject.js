@@ -28,7 +28,8 @@ MovingObject.prototype.draw = function (ctx) {
 MovingObject.prototype.move = function () {
   this.prevPos = this.pos;
   this.bounds(this.pos);
-
+  console.log(this.maxSpeed);
+  console.log(this.maxSpeed);
   if (this.constructor === 'Player') {
     this.decelerate();
   }

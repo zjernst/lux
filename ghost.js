@@ -7,6 +7,7 @@ let RADIUS = 20;
 let VEL = [0,0];
 
 function Ghost(pos, game) {
+  VEL = [0, 0]
   MovingObject.call(this, pos, VEL, RADIUS, COLOR, game);
 };
 
@@ -18,10 +19,9 @@ Ghost.prototype.findPlayer = function () {
 
 Ghost.prototype.direct = function() {
   let player = this.findPlayer();
-  console.log(player)
   let angle = Math.atan2((player[1] - this.pos[1]), player[0] - this.pos[0]);
-  VEL[0] = Math.cos(angle)/2;
-  VEL[1] = Math.sin(angle)/2;
+  VEL[0] = Math.cos(angle)/4;
+  VEL[1] = Math.sin(angle)/4;
 };
 
 Ghost.prototype.move = function () {
