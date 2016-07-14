@@ -102,9 +102,9 @@
 	  this.ctx = ctx;
 	}
 	
-	GameView.prototype.start = function(playerPos) {
+	GameView.prototype.start = function(playerPos, ghosts) {
 	  this.board = this.setBoard();
-	  this.game = new Game(this.board, this.start.bind(this), playerPos);
+	  this.game = new Game(this.board, this.start.bind(this), playerPos, ghosts);
 	  this.player = this.game.player;
 	
 	  this.game.setup(this.ctx);
@@ -167,7 +167,7 @@
 	const util = new Util();
 	// const GameView = require('./game_view.js');
 	
-	function Game(board, newGame, playerPos) {
+	function Game(board, newGame, playerPos, ghosts) {
 	  this.newGame = newGame;
 	  this.dimY = window.innerHeight;
 	  this.dimX = window.innerWidth;
@@ -177,11 +177,14 @@
 	
 	  this.mouse = playerPos;
 	  this.player = new Player(playerPos, this);
-	  this.ghost = new Ghost (util.randomPos(), this);
+	  this.allObjects = [this.player];
+	  if (ghosts) {
+	    this.ghost = new Ghost (util.randomPos(), this);
+	    this.allObjects.push(this.ghost);
+	  }
 	  this.exit = new Exit (this);
 	  this.sight = new Sight(this);
 	
-	  this.allObjects = [this.player, this.ghost];
 	};
 	
 	Game.prototype.setup = function(ctx) {
@@ -223,7 +226,9 @@
 	  this.player.draw(ctx);
 	  this.exit.draw(ctx);
 	  this.sight.draw(ctx);
-	  this.ghost.draw(ctx);
+	  if (this.ghost) {
+	    this.ghost.draw(ctx);
+	  }
 	};
 	
 	Game.prototype.fog = function (ctx) {
@@ -268,7 +273,7 @@
 	   ((this.player.pos[1] > this.exit.pos[1]) &&
 	    (this.player.pos[1] < this.exit.pos[1] + 40))) {
 	      this.player.vel = [0, 0];
-	      this.newGame(this.player.pos);
+	      this.newGame(this.player.pos, 1);
 	    }
 	};
 	
@@ -321,7 +326,7 @@
 	  }
 	};
 	
-	MovingObject.prototype.decelerate = function () {
+	Player.prototype.decelerate = function () {
 	  if (this.vel[0] > 0) {
 	    this.vel[0] -= .01
 	  } else if (this.vel[0] < 0) {
@@ -335,11 +340,13 @@
 	  }
 	};
 	
-	MovingObject.prototype.move = function () {
+	Player.prototype.move = function () {
 	  this.prevPos = this.pos;
 	  this.bounds(this.pos);
 	  this.decelerate();
 	  this.maxSpeed(this.maxVel);
+	  console.log(this.vel[0]);
+	  console.log(this.vel[1]);
 	
 	  this.pos[0] = this.pos[0] + this.vel[0];
 	  this.pos[1] = this.pos[1] + this.vel[1];

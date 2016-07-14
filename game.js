@@ -6,7 +6,7 @@ const Util = require('./util.js');
 const util = new Util();
 // const GameView = require('./game_view.js');
 
-function Game(board, newGame, playerPos) {
+function Game(board, newGame, playerPos, ghosts) {
   this.newGame = newGame;
   this.dimY = window.innerHeight;
   this.dimX = window.innerWidth;
@@ -16,11 +16,14 @@ function Game(board, newGame, playerPos) {
 
   this.mouse = playerPos;
   this.player = new Player(playerPos, this);
-  this.ghost = new Ghost (util.randomPos(), this);
+  this.allObjects = [this.player];
+  if (ghosts) {
+    this.ghost = new Ghost (util.randomPos(), this);
+    this.allObjects.push(this.ghost);
+  }
   this.exit = new Exit (this);
   this.sight = new Sight(this);
 
-  this.allObjects = [this.player, this.ghost];
 };
 
 Game.prototype.setup = function(ctx) {
@@ -62,7 +65,9 @@ Game.prototype.draw = function(ctx) {
   this.player.draw(ctx);
   this.exit.draw(ctx);
   this.sight.draw(ctx);
-  this.ghost.draw(ctx);
+  if (this.ghost) {
+    this.ghost.draw(ctx);
+  }
 };
 
 Game.prototype.fog = function (ctx) {
@@ -107,7 +112,7 @@ Game.prototype.win = function() {
    ((this.player.pos[1] > this.exit.pos[1]) &&
     (this.player.pos[1] < this.exit.pos[1] + 40))) {
       this.player.vel = [0, 0];
-      this.newGame(this.player.pos);
+      this.newGame(this.player.pos, 1);
     }
 };
 

@@ -9,9 +9,9 @@ function GameView(ctx) {
   this.ctx = ctx;
 }
 
-GameView.prototype.start = function(playerPos) {
+GameView.prototype.start = function(playerPos, ghosts) {
   this.board = this.setBoard();
-  this.game = new Game(this.board, this.start.bind(this), playerPos);
+  this.game = new Game(this.board, this.start.bind(this), playerPos, ghosts);
   this.player = this.game.player;
 
   this.game.setup(this.ctx);

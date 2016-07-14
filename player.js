@@ -39,7 +39,7 @@ Player.prototype.maxSpeed = function (speed = 2) {
   }
 };
 
-MovingObject.prototype.decelerate = function () {
+Player.prototype.decelerate = function () {
   if (this.vel[0] > 0) {
     this.vel[0] -= .01
   } else if (this.vel[0] < 0) {
@@ -53,11 +53,13 @@ MovingObject.prototype.decelerate = function () {
   }
 };
 
-MovingObject.prototype.move = function () {
+Player.prototype.move = function () {
   this.prevPos = this.pos;
   this.bounds(this.pos);
   this.decelerate();
   this.maxSpeed(this.maxVel);
+  console.log(this.vel[0]);
+  console.log(this.vel[1]);
 
   this.pos[0] = this.pos[0] + this.vel[0];
   this.pos[1] = this.pos[1] + this.vel[1];
