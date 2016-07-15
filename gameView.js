@@ -10,16 +10,16 @@ function GameView(ctx) {
   this.ctx = ctx;
 }
 
-GameView.prototype.start = function(playerPos, ghosts) {
-  score += 1
+GameView.prototype.start = function(playerPos) {
   this.inProgress = true;
   this.board = this.setBoard();
-  this.game = new Game(this.board, this.start.bind(this), playerPos, ghosts);
+  this.game = new Game(this.board, this.start.bind(this), playerPos, score);
   this.player = this.game.player;
 
   this.game.setup(this.ctx);
   this.keyHandlers();
 
+  score += 1
   requestAnimationFrame(this.animate.bind(this));
 };
 
@@ -56,6 +56,7 @@ GameView.prototype.isOver = function () {
     loss.className = "info fade-in"
     scoreResult.innerHTML = `Score: ${score}`
     canvas.className = "transparent"
+    score = 0;
   }
 };
 

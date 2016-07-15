@@ -16,11 +16,13 @@ function Game(board, newGame, playerPos, ghosts) {
 
   this.mouse = playerPos;
   this.player = new Player(playerPos, this);
-  this.allObjects = [this.player];
-  if (ghosts) {
-    this.ghost = new Ghost (util.randomPos(), this);
-    this.allObjects.push(this.ghost);
+  this.ghosts = [];
+  if (ghosts > 0) {
+    for (var i = 0; i < ghosts; i++) {
+      this.ghosts.push(new Ghost (util.randomPos(), this));
+    }
   }
+  this.allObjects = [this.player].concat(this.ghosts);
   // this.vision = 300;
   this.exit = new Exit (this);
   this.sight = new Sight(this);
@@ -67,9 +69,9 @@ Game.prototype.draw = function(ctx) {
   this.exit.draw(ctx);
   this.fog(ctx, this.vision);
   this.sight.draw(ctx);
-  if (this.ghost) {
-    this.ghost.draw(ctx);
-  }
+  this.ghosts.forEach((ghost) => {
+    ghost.draw(ctx);
+  });
 };
 
 Game.prototype.fog = function (ctx) {
@@ -94,7 +96,7 @@ Game.prototype.step = function () {
   this.moveObjects();
   // this.vision -= .01;
   this.win();
-  if (this.ghost) {
+  if (this.ghosts.length > 0) {
     this.over();
   }
 };
@@ -123,12 +125,14 @@ Game.prototype.win = function() {
 };
 
 Game.prototype.over = function() {
-  if (((this.player.pos[0] > this.ghost.pos[0] - this.ghost.radius) &&
-    (this.player.pos[0] < this.ghost.pos[0] + this.ghost.radius)) &&
-   ((this.player.pos[1] > this.ghost.pos[1] - this.ghost.radius) &&
-    (this.player.pos[1] < this.ghost.pos[1] + this.ghost.radius))) {
-      this.gameOver = true
-    }
+  this.ghosts.forEach((ghost) => {
+    if (((this.player.pos[0] > ghost.pos[0] - ghost.radius) &&
+      (this.player.pos[0] < ghost.pos[0] + ghost.radius)) &&
+     ((this.player.pos[1] > ghost.pos[1] - ghost.radius) &&
+      (this.player.pos[1] < ghost.pos[1] + ghost.radius))) {
+        this.gameOver = true
+      }
+    });
 };
 
 
