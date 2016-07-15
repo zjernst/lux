@@ -24,7 +24,7 @@ key("space", () => {
 		canvasEl.className = "visible fade-in"
 		// newGame.className = "info gone"
 		// toolTip.className = "gone"
-
+    gameView.resetScore();
 		gameView.start();
   }
 })

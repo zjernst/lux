@@ -70,7 +70,7 @@
 			canvasEl.className = "visible fade-in"
 			// newGame.className = "info gone"
 			// toolTip.className = "gone"
-	
+	    gameView.resetScore();
 			gameView.start();
 	  }
 	})
@@ -109,12 +109,16 @@
 	  this.board = this.setBoard();
 	  this.game = new Game(this.board, this.start.bind(this), playerPos, score);
 	  this.player = this.game.player;
+	  score += 1
 	
 	  this.game.setup(this.ctx);
 	  this.keyHandlers();
 	
-	  score += 1
 	  requestAnimationFrame(this.animate.bind(this));
+	};
+	
+	GameView.prototype.resetScore = function () {
+	  score = 0;
 	};
 	
 	GameView.prototype.setBoard = function (userParams) {
@@ -150,7 +154,6 @@
 	    loss.className = "info fade-in"
 	    scoreResult.innerHTML = `Score: ${score}`
 	    canvas.className = "transparent"
-	    score = 0;
 	  }
 	};
 	
