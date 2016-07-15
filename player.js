@@ -2,12 +2,11 @@ const MovingObject = require('./MovingObject.js');
 const Util = require('./util.js');
 const util = new Util();
 
-const COLOR = "#3e0013";
+const COLOR = "#1bac96";
 let RADIUS = 7.5;
 let VEL = [0,0];
 
 function Player(pos, game) {
-  console.log(VEL)
   VEL = [0, 0]
   MovingObject.call(this, pos, VEL, RADIUS, COLOR, game);
   this.maxVel = 2;

@@ -9,6 +9,10 @@ html, body, canvas, h1, h2, h3, h4, h5 {
 @-moz-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
 @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
 
+@-webkit-keyframes fadeOut { from { opacity:1; } to { opacity:0; } }
+@-moz-keyframes fadeOut { from { opacity:1; } to { opacity:0; } }
+@keyframes fadeOut { from { opacity:1; } to { opacity:0; } }
+
 .fade-in {
   opacity:0;  /* make things invisible upon start */
   -webkit-animation:fadeIn ease-in 1;  /* call our keyframe named fadeIn, use animattion ease-in and repeat it only 1 time */
@@ -22,6 +26,25 @@ html, body, canvas, h1, h2, h3, h4, h5 {
   -webkit-animation-duration:1s;
   -moz-animation-duration:1s;
   animation-duration:1s;
+}
+
+.fade-out {
+  opacity: 1;  /* make things invisible upon start */
+  -webkit-animation:fadeOut ease-in 1;  /* call our keyframe named fadeOut, use animattion ease-in and repeat it only 1 time */
+  -moz-animation:fadeOut ease-in 1;
+  animation:fadeOut ease-in 1;
+
+  -webkit-animation-fill-mode:forwards;  /* this makes sure that after animation is done we remain at the last keyframe value (opacity: 1)*/
+  -moz-animation-fill-mode:forwards;
+  animation-fill-mode:forwards;
+
+  -webkit-animation-duration:1s;
+  -moz-animation-duration:1s;
+  animation-duration:1s;
+}
+
+* {
+font-family: 'Nothing You Could Do', cursive;
 }
 
 #game {
@@ -51,9 +74,26 @@ html, body, canvas, h1, h2, h3, h4, h5 {
   z-index: 2;
 }
 
+.box-wrapper {
+  height: 135px;
+  width: 100%;
+  background-color: rgba(0,0,0,.6);
+  margin: 5% auto 0 auto;
+  overflow: wrap;
+}
+
 .info {
   color: white;
   top: 50%;
   transform: translateY(-50%);
   position: relative;
+}
+
+.new-game-text {
+  font-size: 50px;
+}
+
+.new-game-para {
+  font-size: 35px;
+  margin: 0;
 }

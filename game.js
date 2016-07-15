@@ -29,15 +29,19 @@ function Game(board, newGame, playerPos, ghosts, tutorial) {
   }
   this.allObjects = [this.player].concat(this.ghosts);
   // this.vision = 300;
-  this.exit = new Exit (this);
+  this.exit = new Exit (this, tutorial);
   this.sight = new Sight(this, tutorial);
   this.gameOver = false;
-
+  window.setTimeout(() => {
+    this.exit.tutorial = false;
+  }, 55000)
 };
 
 Game.prototype.setup = function(ctx) {
   ctx.clearRect(0, 0, this.dimX, this.dimY);
   this.board.render();
+  // const canvas = document.getElementById('world');
+  // canvas.className = "fade-in"
   this.player.draw(ctx);
   this.exit.draw(ctx);
   this.sight.draw(ctx);
@@ -70,7 +74,6 @@ Game.prototype.draw = function(ctx) {
 
   if (this.hitWall(ctx, this.player)) {
     this.player.setMax(.4);
-    console.log(this.player.maxVel);
   } else {
     this.player.setMax(2);
   }
@@ -86,9 +89,8 @@ Game.prototype.draw = function(ctx) {
 Game.prototype.fog = function (ctx) {
   let pX = this.player.pos[0];
   let pY = this.player.pos[1];
-  let gradient = ctx.createRadialGradient(pX, pY, 150, pX, pY, 300);
+  let gradient = ctx.createRadialGradient(pX, pY, 150, pX, pY, 340);
   gradient.addColorStop(0, "rgba(0,0,0,0)");
-  console.log(this.opacity);
   gradient.addColorStop(1, `rgba(0,0,0,${this.opacity})`);
   ctx.save();
   ctx.fillStyle = gradient;
@@ -96,7 +98,7 @@ Game.prototype.fog = function (ctx) {
   ctx.restore();
 
   if (this.opacity < 1) {
-    this.opacity += .0002
+    this.opacity += .00015
   }
 };
 
@@ -130,10 +132,14 @@ Game.prototype.hitWall = function (ctx, player) {
 
 Game.prototype.win = function() {
   if (((this.player.pos[0] > this.exit.pos[0]) &&
-    (this.player.pos[0] < this.exit.pos[0] + 40)) &&
+    (this.player.pos[0] < this.exit.pos[0] + 60)) &&
    ((this.player.pos[1] > this.exit.pos[1]) &&
-    (this.player.pos[1] < this.exit.pos[1] + 40))) {
+    (this.player.pos[1] < this.exit.pos[1] + 60))) {
       this.player.vel = [0, 0];
+      window.cancelAnimationFrame(window.animation);
+      window.animation = undefined;
+      const canvas = document.getElementById('world');
+      // canvas.className = "fade-out"
       this.newGame(this.player.pos, 1);
     }
 };

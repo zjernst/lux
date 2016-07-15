@@ -2,17 +2,46 @@
 <html>
   <head>
 
-    <title>Escape</title>
+    <title>Lux in Tenebris</title>
     <link rel="stylesheet" href='./style.css'>
+    <link href='https://fonts.googleapis.com/css?family=Shadows+Into+Light|Amatic+SC:700|Nothing+You+Could+Do|Zeyada|Caveat:700,400' rel='stylesheet' type='text/css'>
   </head>
   <body>
 
     <div id="game">
       <section class="info-wrapper group center" id="info">
+        <div class="box-wrapper" id="box-wrapper">
+        <div class="info" id="new-game">
+          <h1 class="new-game-text"> LUX IN TENEBRIS</h1>
+          <p class="new-game-para" id="sub-text"> Use W-A-S-D to move </p>
+        </div>
+
+        <div class="info gone" id="flashlight">
+          <h1 class="new-game-text">It's getting dark in here...</h1>
+          <p class="new-game-para"> Use the mouse to point your flashlight </p>
+        </div>
+
+        <div class="info gone" id="terrain">
+          <h1 class="new-game-text">Is the terrain changing? Where am I?</h1>
+          <p class="new-game-para"> Running into the blocks will slow you down </p>
+        </div>
+
+        <div class="info gone" id="exit">
+          <h1 class="new-game-text">I... I want to leave...</h1>
+          <p class="new-game-para"> Find Red Portals to enter the next area </p>
+        </div>
+
+        <div class="info gone" id="ghost">
+          <h1 class="new-game-text">Thank goodness I brought a flashlight</h1>
+          <p class="new-game-para">Proceed when ready -- Oh, and beware of ghosts...</p>
+        </div>
+        </div>
+
+
         <div class="info gone" id="lost-game">
-            <h2> Game Over </h2>
-            <p id="score"></p>
-            <p> Press space to try again </p>
+            <h1 class="new-game-text"> Game Over </h2>
+            <p class="new-game-para" id="score"></p>
+            <p class="new-game-para"> Press space to try again </p>
         </div>
       </section>
 

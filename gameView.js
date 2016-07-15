@@ -11,7 +11,6 @@ function GameView(ctx) {
 }
 
 GameView.prototype.tutorial = function(playerPos) {
-  this.inProgress = true;
   this.board = this.setBoard();
   this.game = new Game(this.board, this.start.bind(this), playerPos, score, true);
   this.player = this.game.player;
@@ -19,10 +18,81 @@ GameView.prototype.tutorial = function(playerPos) {
   this.game.setup(this.ctx);
   this.keyHandlers();
 
-  requestAnimationFrame(this.animate.bind(this));
+  tutorialMessages();
+
+  // requestAnimationFrame(this.animate.bind(this));
+  this.animate();
+};
+
+function tutorialMessages() {
+  const newGame = document.getElementById("new-game");
+  const subtext = document.getElementById("sub-text");
+  const container = document.getElementById("box-wrapper")
+  const flash = document.getElementById("flashlight");
+  const terrain = document.getElementById("terrain");
+  const exit = document.getElementById("exit");
+  const ghost = document.getElementById("ghost");
+
+  window.skip = window.setTimeout(() => {
+    subtext.innerHTML = "Press Space to skip tutorial";
+  }, 10000);
+
+  window.welcome = window.setTimeout(() => {
+    newGame.className = "info gone";
+    container.className = "box-wrapper gone";
+  }, 15000);
+
+  window.flashlight = window.setTimeout(() => {
+    flash.className = "info";
+    container.className = "box-wrapper";
+  }, 20000);
+
+  window.removeFlash = window.setTimeout(() => {
+    flash.className = "info gone";
+    container.className = "box-wrapper gone";
+  }, 30000);
+
+  window.terrainTimer = window.setTimeout(() => {
+    terrain.className = "info";
+    container.className = "box-wrapper";
+  }, 35000);
+
+  window.removeTarrain = window.setTimeout(() => {
+    terrain.className = "info gone";
+    container.className = "box-wrapper gone";
+  }, 45000);
+
+  window.exitTimer = window.setTimeout(() => {
+    exit.className = "info";
+    container.className = "box-wrapper";
+  }, 48000);
+
+  window.removeExit = window.setTimeout(() => {
+    exit.className = "info gone";
+    container.className = "box-wrapper gone";
+  }, 55000);
+
+  window.ghostTimer = window.setTimeout(() => {
+    ghost.className = "info";
+    container.className = "box-wrapper";
+  }, 58000);
+
+  window.removeGhost = window.setTimeout(() => {
+    ghost.className = "info gone";
+    container.className = "box-wrapper gone";
+  }, 75000);
+};
+
+function clearTutorial() {
+  window.clearTimeout(flashlight);
+  window.clearTimeout(terrainTimer);
+  window.clearTimeout(exitTimer);
+  window.clearTimeout(ghostTimer);
 };
 
 GameView.prototype.start = function(playerPos) {
+  clearTutorial();
+  window.cancelAnimationFrame(window.animation);
   this.inProgress = true;
   this.board = this.setBoard();
   this.game = new Game(this.board, this.start.bind(this), playerPos, score);
@@ -30,9 +100,10 @@ GameView.prototype.start = function(playerPos) {
   score += 1
 
   this.game.setup(this.ctx);
-  this.keyHandlers();
 
-  requestAnimationFrame(this.animate.bind(this));
+  // requestAnimationFrame(this.animate.bind(this));
+  this.animate();
+  this.keyHandlers();
 };
 
 GameView.prototype.resetScore = function () {
@@ -55,7 +126,7 @@ GameView.prototype.animate = function () {
   this.game.draw(this.ctx);
   this.isOver();
 
-  requestAnimationFrame(this.animate.bind(this))
+  window.animation = window.requestAnimationFrame(this.animate.bind(this))
 };
 
 GameView.prototype.isOver = function () {
@@ -63,7 +134,11 @@ GameView.prototype.isOver = function () {
 
   if (result) {
     this.inProgress = false;
+    window.cancelAnimationFrame(window.animation)
+    window.animation = undefined;
+
     const infoWrapper = document.getElementById("info");
+    const box = document.getElementById("box-wrapper");
     const canvas = document.getElementById("world");
     const loss = document.getElementById("lost-game");
     const scoreResult = document.getElementById("score");

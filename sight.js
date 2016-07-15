@@ -28,13 +28,13 @@ Sight.prototype.draw = function (ctx) {
   let angle = Math.atan2((playerY - mouseY), playerX - mouseX);
   ctx.rotate(angle + Math.PI/1.33);
   ctx.moveTo(-20,-20);
-  ctx.lineTo(500, 200);
-  ctx.lineTo(200, 500);
+  ctx.lineTo(400, 160);
+  ctx.lineTo(160, 400);
   ctx.lineTo(-20,-20);
   ctx.fill();
   ctx.restore();
   if (this.opacity < 1) {
-    this.opacity += 0.0002
+    this.opacity += 0.00015
   }
 };
 
