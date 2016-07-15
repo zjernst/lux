@@ -1,6 +1,12 @@
-function Exit(game, tutorial) {
+const Util = require('./util');
+const util = new Util ();
+
+function Exit(game, tutorial, distanceFromPlayer) {
   this.tutorial = tutorial;
-  this.pos = [Math.random()*(game.dimX-60), Math.random()*(game.dimY-60)];
+  this.pos = util.randomPos(game.player.pos, distanceFromPlayer);
+  if ((this.pos[0] > game.dimX - 60) || (this.pos[1] > game.dimY - 60)) {
+    this.pos = util.randomPos(game.player.pos, distanceFromPlayer);
+  }
 }
 
 Exit.prototype.draw = function (ctx) {

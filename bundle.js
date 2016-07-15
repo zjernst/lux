@@ -289,12 +289,12 @@
 	  this.ghosts = [];
 	  if (ghosts > 0) {
 	    for (var i = 0; i < ghosts; i++) {
-	      this.ghosts.push(new Ghost (util.randomPos(), this));
+	      this.ghosts.push(new Ghost (util.randomPos(this.player.pos, 80), this));
 	    }
 	  }
 	  this.allObjects = [this.player].concat(this.ghosts);
 	  // this.vision = 300;
-	  this.exit = new Exit (this, tutorial);
+	  this.exit = new Exit (this, tutorial, 500);
 	  this.sight = new Sight(this, tutorial);
 	  this.gameOver = false;
 	  window.setTimeout(() => {
@@ -628,10 +628,15 @@
 	  Child.prototype.constructor = Child;
 	};
 	
-	Util.prototype.randomPos = function() {
+	Util.prototype.randomPos = function(playerPos, distanceFromPlayer) {
 	  const width = window.innerWidth * Math.random();
 	  const height = window.innerHeight * Math.random();
-	  return [width, height];
+	  if ((Math.abs(width - playerPos[0]) < distanceFromPlayer) ||
+	      (Math.abs(height - playerPos[1]) < distanceFromPlayer)) {
+	    return this.randomPos(playerPos);
+	  } else {
+	    return [width, height];
+	  }
 	};
 	
 	Util.prototype.randomStart = function(windowWidth, windowHeight, weight) {
@@ -966,11 +971,17 @@
 
 /***/ },
 /* 8 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	function Exit(game, tutorial) {
+	const Util = __webpack_require__(5);
+	const util = new Util ();
+	
+	function Exit(game, tutorial, distanceFromPlayer) {
 	  this.tutorial = tutorial;
-	  this.pos = [Math.random()*(game.dimX-60), Math.random()*(game.dimY-60)];
+	  this.pos = util.randomPos(game.player.pos, distanceFromPlayer);
+	  if ((this.pos[0] > game.dimX - 60) || (this.pos[1] > game.dimY - 60)) {
+	    this.pos = util.randomPos(game.player.pos, distanceFromPlayer);
+	  }
 	}
 	
 	Exit.prototype.draw = function (ctx) {
@@ -1001,7 +1012,6 @@
 	  this.opacity = 0;
 	  this.flickering = true;
 	  this.direction = "increasing";
-	
 	};
 	
 	util.inherits(MovingObject, Ghost)

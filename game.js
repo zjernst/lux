@@ -24,12 +24,12 @@ function Game(board, newGame, playerPos, ghosts, tutorial) {
   this.ghosts = [];
   if (ghosts > 0) {
     for (var i = 0; i < ghosts; i++) {
-      this.ghosts.push(new Ghost (util.randomPos(), this));
+      this.ghosts.push(new Ghost (util.randomPos(this.player.pos, 80), this));
     }
   }
   this.allObjects = [this.player].concat(this.ghosts);
   // this.vision = 300;
-  this.exit = new Exit (this, tutorial);
+  this.exit = new Exit (this, tutorial, 500);
   this.sight = new Sight(this, tutorial);
   this.gameOver = false;
   window.setTimeout(() => {

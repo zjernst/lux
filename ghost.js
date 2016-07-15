@@ -12,7 +12,6 @@ function Ghost(pos, game) {
   this.opacity = 0;
   this.flickering = true;
   this.direction = "increasing";
-
 };
 
 util.inherits(MovingObject, Ghost)

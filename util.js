@@ -8,10 +8,15 @@ Util.prototype.inherits = function(Parent, Child) {
   Child.prototype.constructor = Child;
 };
 
-Util.prototype.randomPos = function() {
+Util.prototype.randomPos = function(playerPos, distanceFromPlayer) {
   const width = window.innerWidth * Math.random();
   const height = window.innerHeight * Math.random();
-  return [width, height];
+  if ((Math.abs(width - playerPos[0]) < distanceFromPlayer) ||
+      (Math.abs(height - playerPos[1]) < distanceFromPlayer)) {
+    return this.randomPos(playerPos);
+  } else {
+    return [width, height];
+  }
 };
 
 Util.prototype.randomStart = function(windowWidth, windowHeight, weight) {
