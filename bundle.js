@@ -74,18 +74,9 @@
 			gameView.start();
 	  }
 	})
-	// el.addEventListener("keydown", (event) => {
-	//   if (event.which === 32 && !gameView.inProgress) {
-	//     infoEl.className = "info-wrapper center group gone"
-	// 		canvasEl.className = "visible fade-in"
-	// 		// newGame.className = "info gone"
-	// 		// toolTip.className = "gone"
-	//
-	// 		gameView.start();
-	//   }
-	// }
 	
-	gameView.start();
+	gameView.tutorial();
+	// gameView.start();
 
 
 /***/ },
@@ -103,6 +94,18 @@
 	function GameView(ctx) {
 	  this.ctx = ctx;
 	}
+	
+	GameView.prototype.tutorial = function(playerPos) {
+	  this.inProgress = true;
+	  this.board = this.setBoard();
+	  this.game = new Game(this.board, this.start.bind(this), playerPos, score, true);
+	  this.player = this.game.player;
+	
+	  this.game.setup(this.ctx);
+	  this.keyHandlers();
+	
+	  requestAnimationFrame(this.animate.bind(this));
+	};
 	
 	GameView.prototype.start = function(playerPos) {
 	  this.inProgress = true;
@@ -193,11 +196,16 @@
 	const util = new Util();
 	// const GameView = require('./game_view.js');
 	
-	function Game(board, newGame, playerPos, ghosts) {
+	function Game(board, newGame, playerPos, ghosts, tutorial) {
 	  this.newGame = newGame;
 	  this.dimY = window.innerHeight;
 	  this.dimX = window.innerWidth;
-	  this.board = board
+	  this.board = board;
+	  this.opacity = 1;
+	
+	  if (tutorial) {
+	    this.opacity = .01
+	  }
 	
 	  playerPos = playerPos || [(this.dimX / 2), (this.dimY / 2)]
 	
@@ -212,7 +220,7 @@
 	  this.allObjects = [this.player].concat(this.ghosts);
 	  // this.vision = 300;
 	  this.exit = new Exit (this);
-	  this.sight = new Sight(this);
+	  this.sight = new Sight(this, tutorial);
 	  this.gameOver = false;
 	
 	};
@@ -222,6 +230,10 @@
 	  this.board.render();
 	  this.player.draw(ctx);
 	  this.exit.draw(ctx);
+	  this.sight.draw(ctx);
+	  this.ghosts.forEach((ghost) => {
+	    ghost.draw(ctx);
+	  })
 	  window.addEventListener('mousemove', (e) => {
 	    this.mouse = [e.clientX, e.clientY]
 	  });
@@ -254,7 +266,7 @@
 	  }
 	  this.player.draw(ctx);
 	  this.exit.draw(ctx);
-	  this.fog(ctx, this.vision);
+	  this.fog(ctx);
 	  this.sight.draw(ctx);
 	  this.ghosts.forEach((ghost) => {
 	    ghost.draw(ctx);
@@ -266,11 +278,16 @@
 	  let pY = this.player.pos[1];
 	  let gradient = ctx.createRadialGradient(pX, pY, 150, pX, pY, 300);
 	  gradient.addColorStop(0, "rgba(0,0,0,0)");
-	  gradient.addColorStop(1, "rgba(0,0,0,1)");
+	  console.log(this.opacity);
+	  gradient.addColorStop(1, `rgba(0,0,0,${this.opacity})`);
 	  ctx.save();
 	  ctx.fillStyle = gradient;
 	  ctx.fillRect(0,0,this.dimX,this.dimY)
 	  ctx.restore();
+	
+	  if (this.opacity < 1) {
+	    this.opacity += .0002
+	  }
 	};
 	
 	Game.prototype.moveObjects = function () {
@@ -562,12 +579,18 @@
 /***/ function(module, exports) {
 
 	
-	function Sight(game) {
+	function Sight(game, tutorial) {
 	  this.game = game;
+	  this.tutorial = tutorial;
+	  this.opacity = .01;
 	}
 	
 	Sight.prototype.draw = function (ctx) {
-	  ctx.fillStyle = 'black';
+	  if (this.tutorial) {
+	    ctx.fillStyle = `rgba(0,0,0,${this.opacity})`
+	  } else {
+	    ctx.fillStyle = 'black';
+	  }
 	  ctx.beginPath();
 	  ctx.moveTo(0,0);
 	  ctx.lineTo(0, this.game.dimY);
@@ -590,6 +613,9 @@
 	  ctx.lineTo(-20,-20);
 	  ctx.fill();
 	  ctx.restore();
+	  if (this.opacity < 1) {
+	    this.opacity += 0.0002
+	  }
 	};
 	
 	module.exports = Sight;

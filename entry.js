@@ -28,15 +28,6 @@ key("space", () => {
 		gameView.start();
   }
 })
-// el.addEventListener("keydown", (event) => {
-//   if (event.which === 32 && !gameView.inProgress) {
-//     infoEl.className = "info-wrapper center group gone"
-// 		canvasEl.className = "visible fade-in"
-// 		// newGame.className = "info gone"
-// 		// toolTip.className = "gone"
-//
-// 		gameView.start();
-//   }
-// }
 
-gameView.start();
+gameView.tutorial();
+// gameView.start();

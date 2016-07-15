@@ -1,10 +1,16 @@
 
-function Sight(game) {
+function Sight(game, tutorial) {
   this.game = game;
+  this.tutorial = tutorial;
+  this.opacity = .01;
 }
 
 Sight.prototype.draw = function (ctx) {
-  ctx.fillStyle = 'black';
+  if (this.tutorial) {
+    ctx.fillStyle = `rgba(0,0,0,${this.opacity})`
+  } else {
+    ctx.fillStyle = 'black';
+  }
   ctx.beginPath();
   ctx.moveTo(0,0);
   ctx.lineTo(0, this.game.dimY);
@@ -27,6 +33,9 @@ Sight.prototype.draw = function (ctx) {
   ctx.lineTo(-20,-20);
   ctx.fill();
   ctx.restore();
+  if (this.opacity < 1) {
+    this.opacity += 0.0002
+  }
 };
 
 module.exports = Sight;

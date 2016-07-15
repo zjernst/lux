@@ -10,6 +10,18 @@ function GameView(ctx) {
   this.ctx = ctx;
 }
 
+GameView.prototype.tutorial = function(playerPos) {
+  this.inProgress = true;
+  this.board = this.setBoard();
+  this.game = new Game(this.board, this.start.bind(this), playerPos, score, true);
+  this.player = this.game.player;
+
+  this.game.setup(this.ctx);
+  this.keyHandlers();
+
+  requestAnimationFrame(this.animate.bind(this));
+};
+
 GameView.prototype.start = function(playerPos) {
   this.inProgress = true;
   this.board = this.setBoard();

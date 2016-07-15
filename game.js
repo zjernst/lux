@@ -6,11 +6,16 @@ const Util = require('./util.js');
 const util = new Util();
 // const GameView = require('./game_view.js');
 
-function Game(board, newGame, playerPos, ghosts) {
+function Game(board, newGame, playerPos, ghosts, tutorial) {
   this.newGame = newGame;
   this.dimY = window.innerHeight;
   this.dimX = window.innerWidth;
-  this.board = board
+  this.board = board;
+  this.opacity = 1;
+
+  if (tutorial) {
+    this.opacity = .01
+  }
 
   playerPos = playerPos || [(this.dimX / 2), (this.dimY / 2)]
 
@@ -25,7 +30,7 @@ function Game(board, newGame, playerPos, ghosts) {
   this.allObjects = [this.player].concat(this.ghosts);
   // this.vision = 300;
   this.exit = new Exit (this);
-  this.sight = new Sight(this);
+  this.sight = new Sight(this, tutorial);
   this.gameOver = false;
 
 };
@@ -35,6 +40,10 @@ Game.prototype.setup = function(ctx) {
   this.board.render();
   this.player.draw(ctx);
   this.exit.draw(ctx);
+  this.sight.draw(ctx);
+  this.ghosts.forEach((ghost) => {
+    ghost.draw(ctx);
+  })
   window.addEventListener('mousemove', (e) => {
     this.mouse = [e.clientX, e.clientY]
   });
@@ -67,7 +76,7 @@ Game.prototype.draw = function(ctx) {
   }
   this.player.draw(ctx);
   this.exit.draw(ctx);
-  this.fog(ctx, this.vision);
+  this.fog(ctx);
   this.sight.draw(ctx);
   this.ghosts.forEach((ghost) => {
     ghost.draw(ctx);
@@ -79,11 +88,16 @@ Game.prototype.fog = function (ctx) {
   let pY = this.player.pos[1];
   let gradient = ctx.createRadialGradient(pX, pY, 150, pX, pY, 300);
   gradient.addColorStop(0, "rgba(0,0,0,0)");
-  gradient.addColorStop(1, "rgba(0,0,0,1)");
+  console.log(this.opacity);
+  gradient.addColorStop(1, `rgba(0,0,0,${this.opacity})`);
   ctx.save();
   ctx.fillStyle = gradient;
   ctx.fillRect(0,0,this.dimX,this.dimY)
   ctx.restore();
+
+  if (this.opacity < 1) {
+    this.opacity += .0002
+  }
 };
 
 Game.prototype.moveObjects = function () {
