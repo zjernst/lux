@@ -10,6 +10,7 @@ function GameView(ctx) {
 }
 
 GameView.prototype.start = function(playerPos, ghosts) {
+  this.inProgress = true;
   this.board = this.setBoard();
   this.game = new Game(this.board, this.start.bind(this), playerPos, ghosts);
   this.player = this.game.player;
@@ -34,8 +35,24 @@ GameView.prototype.setBoard = function (userParams) {
 GameView.prototype.animate = function () {
   this.game.step();
   this.game.draw(this.ctx);
+  this.isOver();
 
   requestAnimationFrame(this.animate.bind(this))
+};
+
+GameView.prototype.isOver = function () {
+  let result = this.game.gameOver;
+
+  if (result) {
+    this.inProgress = false;
+    const infoWrapper = document.getElementById("info");
+    const canvas = document.getElementById("world");
+    const loss = document.getElementById("lost-game");
+
+    infoWrapper.className = "info-wrapper group center fade-in"
+    loss.className = "info fade-in"
+    canvas.className = "transparent"
+  }
 };
 
 GameView.MOVES = {

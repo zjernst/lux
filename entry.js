@@ -15,27 +15,28 @@ const ctx = canvasEl.getContext('2d');
 const gameView = new GameView(ctx);
 
 const el = document.getElementsByTagName('body')[0];
+const infoEl = document.getElementById("info");
 
-// const params = {
-//   canvas_id:    "world",
-//   cell_width:   20,
-//   cell_height:  20,
-//   init_cells:   util.randomStart(70, .2),
-//   colorful: true
-// }
+key("space", () => {
+  // debugger
+  if (!gameView.inProgress) {
+    infoEl.className = "info-wrapper center group gone"
+		canvasEl.className = "visible fade-in"
+		// newGame.className = "info gone"
+		// toolTip.className = "gone"
+
+		gameView.start();
+  }
+})
+// el.addEventListener("keydown", (event) => {
+//   if (event.which === 32 && !gameView.inProgress) {
+//     infoEl.className = "info-wrapper center group gone"
+// 		canvasEl.className = "visible fade-in"
+// 		// newGame.className = "info gone"
+// 		// toolTip.className = "gone"
 //
-// const board = new GameOfLife(params)
+// 		gameView.start();
+//   }
+// }
 
 gameView.start();
-
-
-
-//
-// canvasEl.height = window.innerHeight;
-// canvasEl.width = window.innerWidth;
-//
-// const img = new Image();
-// img.src = "maze.gif";
-//
-// ctx.drawImage(img, 0, 0);
-// const gameView = new GameView(canvasEl.width, canvasEl.height);

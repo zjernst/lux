@@ -24,6 +24,7 @@ function Game(board, newGame, playerPos, ghosts) {
   // this.vision = 300;
   this.exit = new Exit (this);
   this.sight = new Sight(this);
+  this.gameOver = false;
 
 };
 
@@ -93,6 +94,9 @@ Game.prototype.step = function () {
   this.moveObjects();
   // this.vision -= .01;
   this.win();
+  if (this.ghost) {
+    this.over();
+  }
 };
 
 Game.prototype.hitWall = function (ctx, player) {
@@ -115,6 +119,15 @@ Game.prototype.win = function() {
     (this.player.pos[1] < this.exit.pos[1] + 40))) {
       this.player.vel = [0, 0];
       this.newGame(this.player.pos, 1);
+    }
+};
+
+Game.prototype.over = function() {
+  if (((this.player.pos[0] > this.ghost.pos[0] - this.ghost.radius) &&
+    (this.player.pos[0] < this.ghost.pos[0] + this.ghost.radius)) &&
+   ((this.player.pos[1] > this.ghost.pos[1] - this.ghost.radius) &&
+    (this.player.pos[1] < this.ghost.pos[1] + this.ghost.radius))) {
+      this.gameOver = true
     }
 };
 

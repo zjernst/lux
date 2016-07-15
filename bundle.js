@@ -61,30 +61,31 @@
 	const gameView = new GameView(ctx);
 	
 	const el = document.getElementsByTagName('body')[0];
+	const infoEl = document.getElementById("info");
 	
-	// const params = {
-	//   canvas_id:    "world",
-	//   cell_width:   20,
-	//   cell_height:  20,
-	//   init_cells:   util.randomStart(70, .2),
-	//   colorful: true
-	// }
+	key("space", () => {
+	  // debugger
+	  if (!gameView.inProgress) {
+	    infoEl.className = "info-wrapper center group gone"
+			canvasEl.className = "visible fade-in"
+			// newGame.className = "info gone"
+			// toolTip.className = "gone"
+	
+			gameView.start();
+	  }
+	})
+	// el.addEventListener("keydown", (event) => {
+	//   if (event.which === 32 && !gameView.inProgress) {
+	//     infoEl.className = "info-wrapper center group gone"
+	// 		canvasEl.className = "visible fade-in"
+	// 		// newGame.className = "info gone"
+	// 		// toolTip.className = "gone"
 	//
-	// const board = new GameOfLife(params)
+	// 		gameView.start();
+	//   }
+	// }
 	
 	gameView.start();
-	
-	
-	
-	//
-	// canvasEl.height = window.innerHeight;
-	// canvasEl.width = window.innerWidth;
-	//
-	// const img = new Image();
-	// img.src = "maze.gif";
-	//
-	// ctx.drawImage(img, 0, 0);
-	// const gameView = new GameView(canvasEl.width, canvasEl.height);
 
 
 /***/ },
@@ -103,6 +104,7 @@
 	}
 	
 	GameView.prototype.start = function(playerPos, ghosts) {
+	  this.inProgress = true;
 	  this.board = this.setBoard();
 	  this.game = new Game(this.board, this.start.bind(this), playerPos, ghosts);
 	  this.player = this.game.player;
@@ -127,8 +129,24 @@
 	GameView.prototype.animate = function () {
 	  this.game.step();
 	  this.game.draw(this.ctx);
+	  this.isOver();
 	
 	  requestAnimationFrame(this.animate.bind(this))
+	};
+	
+	GameView.prototype.isOver = function () {
+	  let result = this.game.gameOver;
+	
+	  if (result) {
+	    this.inProgress = false;
+	    const infoWrapper = document.getElementById("info");
+	    const canvas = document.getElementById("world");
+	    const loss = document.getElementById("lost-game");
+	
+	    infoWrapper.className = "info-wrapper group center fade-in"
+	    loss.className = "info fade-in"
+	    canvas.className = "transparent"
+	  }
 	};
 	
 	GameView.MOVES = {
@@ -185,6 +203,7 @@
 	  // this.vision = 300;
 	  this.exit = new Exit (this);
 	  this.sight = new Sight(this);
+	  this.gameOver = false;
 	
 	};
 	
@@ -254,6 +273,9 @@
 	  this.moveObjects();
 	  // this.vision -= .01;
 	  this.win();
+	  if (this.ghost) {
+	    this.over();
+	  }
 	};
 	
 	Game.prototype.hitWall = function (ctx, player) {
@@ -276,6 +298,15 @@
 	    (this.player.pos[1] < this.exit.pos[1] + 40))) {
 	      this.player.vel = [0, 0];
 	      this.newGame(this.player.pos, 1);
+	    }
+	};
+	
+	Game.prototype.over = function() {
+	  if (((this.player.pos[0] > this.ghost.pos[0] - this.ghost.radius) &&
+	    (this.player.pos[0] < this.ghost.pos[0] + this.ghost.radius)) &&
+	   ((this.player.pos[1] > this.ghost.pos[1] - this.ghost.radius) &&
+	    (this.player.pos[1] < this.ghost.pos[1] + this.ghost.radius))) {
+	      this.gameOver = true
 	    }
 	};
 	
