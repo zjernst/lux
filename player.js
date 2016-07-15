@@ -42,15 +42,15 @@ Player.prototype.maxSpeed = function (speed = 2) {
 
 Player.prototype.decelerate = function () {
   if (this.vel[0] > 0) {
-    this.vel[0] -= .01
+    this.vel[0] -= .02
   } else if (this.vel[0] < 0) {
-    this.vel[0] += .01
+    this.vel[0] += .02
   }
 
   if (this.vel[1] > 0) {
-    this.vel[1] -= .01
+    this.vel[1] -= .02
   } else if (this.vel[1] < 0) {
-    this.vel[1] += .01
+    this.vel[1] += .02
   }
 };
 

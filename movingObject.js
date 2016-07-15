@@ -8,7 +8,6 @@ function MovingObject(pos, vel, radius, color, game) {
 }
 
 MovingObject.prototype.draw = function (ctx) {
-  // ctx.clearRect(this.prevPos[0], this.prevPos[1], this.radius * 2, this.radius * 2)
 
   ctx.fillStyle = this.color;
   ctx.beginPath();

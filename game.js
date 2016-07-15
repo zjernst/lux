@@ -67,7 +67,6 @@ Game.prototype.draw = function(ctx) {
   ctx.clearRect(0, 0, this.dimX, this.dimY);
   if (this.stepping) {
     this.board.step();
-    this.stepping = false;
   } else {
     this.board.render();
   }
@@ -80,10 +79,14 @@ Game.prototype.draw = function(ctx) {
   this.player.draw(ctx);
   this.exit.draw(ctx);
   this.fog(ctx);
-  this.sight.draw(ctx);
   this.ghosts.forEach((ghost) => {
     ghost.draw(ctx);
   });
+  this.sight.draw(ctx);
+  this.ghosts.forEach((ghost) => {
+    ghost.flicker(ctx, this.stepping);
+  })
+  this.stepping = false;
 };
 
 Game.prototype.fog = function (ctx) {

@@ -17,3 +17,11 @@ the mouse. Try to navigate the map to find a Red Portal to take you to the next
 area. The only thing that stands between you is a randomly-generated and shifting
 terrain and a legion of ghosts that builds as you progress further. How long
 can you survive?
+
+## Implementation Details
+
+### Vision
+
+### Terrain
+
+### Ghosts

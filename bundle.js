@@ -332,7 +332,6 @@
 	  ctx.clearRect(0, 0, this.dimX, this.dimY);
 	  if (this.stepping) {
 	    this.board.step();
-	    this.stepping = false;
 	  } else {
 	    this.board.render();
 	  }
@@ -345,10 +344,14 @@
 	  this.player.draw(ctx);
 	  this.exit.draw(ctx);
 	  this.fog(ctx);
-	  this.sight.draw(ctx);
 	  this.ghosts.forEach((ghost) => {
 	    ghost.draw(ctx);
 	  });
+	  this.sight.draw(ctx);
+	  this.ghosts.forEach((ghost) => {
+	    ghost.flicker(ctx, this.stepping);
+	  })
+	  this.stepping = false;
 	};
 	
 	Game.prototype.fog = function (ctx) {
@@ -472,15 +475,15 @@
 	
 	Player.prototype.decelerate = function () {
 	  if (this.vel[0] > 0) {
-	    this.vel[0] -= .01
+	    this.vel[0] -= .02
 	  } else if (this.vel[0] < 0) {
-	    this.vel[0] += .01
+	    this.vel[0] += .02
 	  }
 	
 	  if (this.vel[1] > 0) {
-	    this.vel[1] -= .01
+	    this.vel[1] -= .02
 	  } else if (this.vel[1] < 0) {
-	    this.vel[1] += .01
+	    this.vel[1] += .02
 	  }
 	};
 	
@@ -517,7 +520,6 @@
 	}
 	
 	MovingObject.prototype.draw = function (ctx) {
-	  // ctx.clearRect(this.prevPos[0], this.prevPos[1], this.radius * 2, this.radius * 2)
 	
 	  ctx.fillStyle = this.color;
 	  ctx.beginPath();
@@ -996,6 +998,10 @@
 	function Ghost(pos, game) {
 	  VEL = [0, 0]
 	  MovingObject.call(this, pos, VEL, RADIUS, COLOR, game);
+	  this.opacity = 0;
+	  this.flickering = true;
+	  this.direction = "increasing";
+	
 	};
 	
 	util.inherits(MovingObject, Ghost)
@@ -1015,6 +1021,36 @@
 	  this.direct();
 	  this.pos[0] = this.pos[0] + VEL[0];
 	  this.pos[1] = this.pos[1] + VEL[1];
+	};
+	
+	Ghost.prototype.flicker = function (ctx, stepping) {
+	  let X = this.pos[0];
+	  let Y = this.pos[1];
+	  let gradient = ctx.createRadialGradient(X, Y, 0, X, Y, 50);
+	  gradient.addColorStop(0, `rgba(204,255,255,${this.opacity})`);
+	  gradient.addColorStop(1, "rgba(204,255,255,0)");
+	  ctx.save();
+	  ctx.fillStyle = gradient;
+	  ctx.fillRect(0,0,this.game.dimX, this.game.dimY)
+	  ctx.restore();
+	
+	  if (stepping) {
+	    this.flickering = true;
+	    this.direction = "increasing";
+	  }
+	  if (this.flickering) {
+	    if (this.direction === "increasing") {
+	      this.opacity += .01;
+	      if (this.opacity >= 1) {
+	        this.direction = "decreasing";
+	      }
+	    } else {
+	      this.opacity -= .01;
+	      if (this.opacity <= 0) {
+	        this.flickering = false;
+	      }
+	    }
+	  }
 	};
 	
 	module.exports = Ghost;
