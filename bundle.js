@@ -98,12 +98,14 @@
 	const Util = __webpack_require__(5);
 	const util = new Util();
 	
+	let score = 0;
 	
 	function GameView(ctx) {
 	  this.ctx = ctx;
 	}
 	
 	GameView.prototype.start = function(playerPos, ghosts) {
+	  score += 1
 	  this.inProgress = true;
 	  this.board = this.setBoard();
 	  this.game = new Game(this.board, this.start.bind(this), playerPos, ghosts);
@@ -142,9 +144,11 @@
 	    const infoWrapper = document.getElementById("info");
 	    const canvas = document.getElementById("world");
 	    const loss = document.getElementById("lost-game");
+	    const scoreResult = document.getElementById("score");
 	
 	    infoWrapper.className = "info-wrapper group center fade-in"
 	    loss.className = "info fade-in"
+	    scoreResult.innerHTML = `Score: ${score}`
 	    canvas.className = "transparent"
 	  }
 	};
