@@ -34,7 +34,7 @@ function Game(board, newGame, playerPos, ghosts, tutorial) {
   this.gameOver = false;
   window.setTimeout(() => {
     this.exit.tutorial = false;
-  }, 55000)
+  }, 40000)
 };
 
 Game.prototype.setup = function(ctx) {
@@ -101,7 +101,7 @@ Game.prototype.fog = function (ctx) {
   ctx.restore();
 
   if (this.opacity < 1) {
-    this.opacity += .00015
+    this.opacity += .00025
   }
 };
 

@@ -120,52 +120,52 @@
 	
 	  window.skip = window.setTimeout(() => {
 	    subtext.innerHTML = "Press Space to skip tutorial";
-	  }, 10000);
+	  }, 8000);
 	
 	  window.welcome = window.setTimeout(() => {
 	    newGame.className = "info gone";
 	    container.className = "box-wrapper gone";
-	  }, 15000);
+	  }, 12000);
 	
 	  window.flashlight = window.setTimeout(() => {
 	    flash.className = "info";
 	    container.className = "box-wrapper";
-	  }, 20000);
+	  }, 14000);
 	
 	  window.removeFlash = window.setTimeout(() => {
 	    flash.className = "info gone";
 	    container.className = "box-wrapper gone";
-	  }, 30000);
+	  }, 22000);
 	
 	  window.terrainTimer = window.setTimeout(() => {
 	    terrain.className = "info";
 	    container.className = "box-wrapper";
-	  }, 35000);
+	  }, 24000);
 	
 	  window.removeTarrain = window.setTimeout(() => {
 	    terrain.className = "info gone";
 	    container.className = "box-wrapper gone";
-	  }, 45000);
+	  }, 32000);
 	
 	  window.exitTimer = window.setTimeout(() => {
 	    exit.className = "info";
 	    container.className = "box-wrapper";
-	  }, 48000);
+	  }, 34000);
 	
 	  window.removeExit = window.setTimeout(() => {
 	    exit.className = "info gone";
 	    container.className = "box-wrapper gone";
-	  }, 55000);
+	  }, 42000);
 	
 	  window.ghostTimer = window.setTimeout(() => {
 	    ghost.className = "info";
 	    container.className = "box-wrapper";
-	  }, 58000);
+	  }, 44000);
 	
 	  window.removeGhost = window.setTimeout(() => {
 	    ghost.className = "info gone";
 	    container.className = "box-wrapper gone";
-	  }, 75000);
+	  }, 60000);
 	};
 	
 	function clearTutorial() {
@@ -299,7 +299,7 @@
 	  this.gameOver = false;
 	  window.setTimeout(() => {
 	    this.exit.tutorial = false;
-	  }, 55000)
+	  }, 40000)
 	};
 	
 	Game.prototype.setup = function(ctx) {
@@ -366,7 +366,7 @@
 	  ctx.restore();
 	
 	  if (this.opacity < 1) {
-	    this.opacity += .00015
+	    this.opacity += .00025
 	  }
 	};
 	
@@ -701,7 +701,7 @@
 	  ctx.fill();
 	  ctx.restore();
 	  if (this.opacity < 1) {
-	    this.opacity += 0.00015
+	    this.opacity += 0.00025
 	  }
 	};
 	

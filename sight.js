@@ -34,7 +34,7 @@ Sight.prototype.draw = function (ctx) {
   ctx.fill();
   ctx.restore();
   if (this.opacity < 1) {
-    this.opacity += 0.00015
+    this.opacity += 0.00025
   }
 };
 
