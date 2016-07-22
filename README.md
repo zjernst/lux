@@ -41,8 +41,30 @@ ctx.restore();
 ```
 
 [vision]: ./screenshots/lux_vision.jpg
-![intro]
+![vision]
 
 ### Terrain
 
+The terrain is randomly-generated through a Conway's Game of Life algorithm created by [nomatteus] (https://github.com/nomatteus/conway-game-of-life-js). Each level has the terrain drawn fresh by providing a starting grid with each space having a 20% chance of being active and then stepping the algorithm 10 times. Once the game is in progress, the algorithm continues to step forward every 10 seconds, causing the terrain to alter from beneath the player.
+
+[before]: ./screenshots/lux_before.jpg
+[after]: ./screenshots/lux_after.jpg
+![before]
+![after]
+
 ### Ghosts
+
+Ghosts begin tracking the player starting on the second level. Every level thereafter adds one ghost. Ghosts track the player by calculating the angle between the player position and the ghost position and setting their velocity to move in the direction a set distance on redrawing.
+
+```javascript
+Ghost.prototype.findPlayer = function () {
+  return player = this.game.player.pos
+};
+
+Ghost.prototype.direct = function() {
+  let player = this.findPlayer();
+  let angle = Math.atan2((player[1] - this.pos[1]), player[0] - this.pos[0]);
+  VEL[0] = Math.cos(angle)/4;
+  VEL[1] = Math.sin(angle)/4;
+};
+```
