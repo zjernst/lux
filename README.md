@@ -4,6 +4,7 @@
 A browser based JavaScript employing the Canvas library
 
 [intro]: ./screenshots/lux_intro.jpg
+![intro]
 
 ## Goal
 
@@ -40,6 +41,7 @@ ctx.restore();
 ```
 
 [vision]: ./screenshots/lux_vision.jpg
+![intro]
 
 ### Terrain
 
