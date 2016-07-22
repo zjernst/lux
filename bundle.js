@@ -45,7 +45,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	const GameView = window.GameView = __webpack_require__(1);
-	const GameOfLife = window.GameOfLife = __webpack_require__(7);
+	const GameOfLife = window.GameOfLife = __webpack_require__(9);
 	const Util = __webpack_require__(5);
 	const util = new Util ();
 	// const mazeWidth = 482;
@@ -62,20 +62,37 @@
 	
 	const el = document.getElementsByTagName('body')[0];
 	const infoEl = document.getElementById("info");
+	const boxWrapper = document.getElementById('box-wrapper');
+	let landingStage = true;
+	const landing = document.getElementById('landing');
+	const newGame = document.getElementById('new-game');
+	const lostGame = document.getElementById('lost-game');
 	
 	key("space", () => {
-	  // debugger
-	  if (!gameView.inProgress) {
-	    infoEl.className = "info-wrapper center group gone"
-			canvasEl.className = "visible fade-in"
-			// newGame.className = "info gone"
-			// toolTip.className = "gone"
+	  if (landingStage) {
+	    gameView.tutorial();
+	    landing.className = "landing gone";
+	    canvasEl.className = "visible fade-in";
+	    newGame.className = "info";
+	    boxWrapper.className = "box-wrapper";
+	    landingStage = false;
+	  } else if (!gameView.inProgress) {
+	    infoEl.className = "info-wrapper center group gone";
+	    lostGame.className = "info gone";
+	    canvasEl.className = "visible fade-in";
+	    // newGame.className = "info gone"
+	    // toolTip.className = "gone"
 	    gameView.resetScore();
-			gameView.start();
+	    gameView.start();
 	  }
+	  // key("space", () => {
+	  //   // debugger
+	  //   if (!gameView.inProgress && !landing) {
+	  //   }
+	  // });
+	  // landing = false;
 	})
 	
-	gameView.tutorial();
 	// gameView.start();
 
 
@@ -85,7 +102,7 @@
 
 	const Game = __webpack_require__(2);
 	const Player = window.Player = __webpack_require__(3);
-	const GameOfLife = __webpack_require__(7);
+	const GameOfLife = __webpack_require__(9);
 	const Util = __webpack_require__(5);
 	const util = new Util();
 	
@@ -101,12 +118,12 @@
 	  this.player = this.game.player;
 	
 	  this.game.setup(this.ctx);
-	  this.keyHandlers();
 	
 	  tutorialMessages();
 	
 	  // requestAnimationFrame(this.animate.bind(this));
 	  this.animate();
+	  this.keyHandlers();
 	};
 	
 	function tutorialMessages() {
@@ -169,11 +186,76 @@
 	};
 	
 	function clearTutorial() {
+	  const newGame = document.getElementById("new-game");
+	  const subtext = document.getElementById("sub-text");
+	  const container = document.getElementById("box-wrapper")
+	  const flash = document.getElementById("flashlight");
+	  const terrain = document.getElementById("terrain");
+	  const exit = document.getElementById("exit");
+	  const ghost = document.getElementById("ghost");
+	
+	  newGame.className = "info gone";
+	  subtext.className = "info gone";
+	  container.className = "info gone";
+	  flash.className = "info gone";
+	  terrain.className = "info gone";
+	  exit.className = "info gone";
+	  ghost.className = "info gone";
+	
 	  window.clearTimeout(flashlight);
 	  window.clearTimeout(terrainTimer);
 	  window.clearTimeout(exitTimer);
 	  window.clearTimeout(ghostTimer);
 	};
+	
+	function gameTips() {
+	  const alone = document.getElementById("alone");
+	  const ghostOne = document.getElementById("ghost-one");
+	  const ghostTwo = document.getElementById("ghost-two");
+	  const container = document.getElementById("box-wrapper")
+	  const infoWrapper = document.getElementById("info")
+	
+	  alone.className = "info gone";
+	  ghostOne.className = "info gone";
+	  ghostTwo.className = "info gone";
+	  container.className = "box-wrapper gone";
+	  infoWrapper.className = "info-wrapper center group gone"
+	
+	  if (score === 1) {
+	    infoWrapper.className = "info-wrapper center group"
+	    alone.className = "info";
+	    container.className = "box-wrapper";
+	    window.gameplayTimer = window.setTimeout(() => {
+	      alone.className = "info gone";
+	      container.className = "box-wrapper gone";
+	      infoWrapper.className = "info-wrapper center group gone"
+	    }, 7000);
+	  } else if (score === 2) {
+	    ghostOne.className = "info";
+	    container.className = "box-wrapper";
+	    infoWrapper.className = "info-wrapper center group"
+	    window.gameplayTimer = window.setTimeout(() => {
+	      ghostOne.className = "info gone";
+	      container.className = "box-wrapper gone";
+	      infoWrapper.className = "info-wrapper center group gone"
+	    }, 7000);
+	  } else if (score === 3) {
+	    ghostTwo.className = "info";
+	    container.className = "box-wrapper";
+	    infoWrapper.className = "info-wrapper center group"
+	    window.gameplayTimer = window.setTimeout(() => {
+	      ghostTwo.className = "info gone";
+	      container.className = "box-wrapper gone";
+	      infoWrapper.className = "info-wrapper center group gone"
+	    }, 7000);
+	  }
+	};
+	
+	// function clearGameTips() {
+	//   if (window.gameplayTimer) {
+	//     window.clearTimeout(gameplayTimer);
+	//   }
+	// }
 	
 	GameView.prototype.start = function(playerPos) {
 	  clearTutorial();
@@ -185,6 +267,8 @@
 	  score += 1
 	
 	  this.game.setup(this.ctx);
+	  // clearGameTips();
+	  gameTips();
 	
 	  // requestAnimationFrame(this.animate.bind(this));
 	  this.animate();
@@ -265,8 +349,8 @@
 
 	const Player = __webpack_require__(3);
 	const Sight = __webpack_require__(6);
-	const Exit = __webpack_require__(8);
-	const Ghost = __webpack_require__(9);
+	const Exit = __webpack_require__(7);
+	const Ghost = __webpack_require__(8);
 	const Util = __webpack_require__(5);
 	const util = new Util();
 	// const GameView = require('./game_view.js');
@@ -299,6 +383,7 @@
 	  this.gameOver = false;
 	  window.setTimeout(() => {
 	    this.exit.tutorial = false;
+	
 	  }, 40000)
 	};
 	
@@ -402,7 +487,8 @@
 	  if (((this.player.pos[0] > this.exit.pos[0]) &&
 	    (this.player.pos[0] < this.exit.pos[0] + 60)) &&
 	   ((this.player.pos[1] > this.exit.pos[1]) &&
-	    (this.player.pos[1] < this.exit.pos[1] + 60))) {
+	    (this.player.pos[1] < this.exit.pos[1] + 60)) &&
+	     (!this.exit.tutorial)) {
 	      this.player.vel = [0, 0];
 	      window.cancelAnimationFrame(window.animation);
 	      window.animation = undefined;
@@ -710,6 +796,103 @@
 
 /***/ },
 /* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	const Util = __webpack_require__(5);
+	const util = new Util ();
+	
+	function Exit(game, tutorial, distanceFromPlayer) {
+	  this.tutorial = tutorial;
+	  this.pos = util.randomPos(game.player.pos, distanceFromPlayer);
+	  if ((this.pos[0] > game.dimX - 60) || (this.pos[1] > game.dimY - 60)) {
+	    this.pos = util.randomPos(game.player.pos, distanceFromPlayer);
+	  }
+	}
+	
+	Exit.prototype.draw = function (ctx) {
+	  if (!this.tutorial) {
+	    ctx.fillStyle = 'red'
+	    ctx.fillRect(this.pos[0], this.pos[1], 60, 60)
+	  }
+	};
+	
+	module.exports = Exit;
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	const MovingObject = __webpack_require__(4);
+	const Util = __webpack_require__(5);
+	const util = new Util();
+	
+	const COLOR = "#ccffff";
+	let RADIUS = 20;
+	let VEL = [0,0];
+	
+	function Ghost(pos, game) {
+	  VEL = [0, 0]
+	  MovingObject.call(this, pos, VEL, RADIUS, COLOR, game);
+	  this.opacity = 0;
+	  this.flickering = true;
+	  this.direction = "increasing";
+	};
+	
+	util.inherits(MovingObject, Ghost)
+	
+	Ghost.prototype.findPlayer = function () {
+	  return player = this.game.player.pos
+	};
+	
+	Ghost.prototype.direct = function() {
+	  let player = this.findPlayer();
+	  let angle = Math.atan2((player[1] - this.pos[1]), player[0] - this.pos[0]);
+	  VEL[0] = Math.cos(angle)/4;
+	  VEL[1] = Math.sin(angle)/4;
+	};
+	
+	Ghost.prototype.move = function () {
+	  this.direct();
+	  this.pos[0] = this.pos[0] + VEL[0];
+	  this.pos[1] = this.pos[1] + VEL[1];
+	};
+	
+	Ghost.prototype.flicker = function (ctx, stepping) {
+	  let X = this.pos[0];
+	  let Y = this.pos[1];
+	  let gradient = ctx.createRadialGradient(X, Y, 0, X, Y, 50);
+	  gradient.addColorStop(0, `rgba(204,255,255,${this.opacity})`);
+	  gradient.addColorStop(1, "rgba(204,255,255,0)");
+	  ctx.save();
+	  ctx.fillStyle = gradient;
+	  ctx.fillRect(0,0,this.game.dimX, this.game.dimY)
+	  ctx.restore();
+	
+	  if (stepping) {
+	    this.flickering = true;
+	    this.direction = "increasing";
+	  }
+	  if (this.flickering) {
+	    if (this.direction === "increasing") {
+	      this.opacity += .01;
+	      if (this.opacity >= 1) {
+	        this.direction = "decreasing";
+	      }
+	    } else {
+	      this.opacity -= .01;
+	      if (this.opacity <= 0) {
+	        this.flickering = false;
+	      }
+	    }
+	  }
+	};
+	
+	module.exports = Ghost;
+
+
+/***/ },
+/* 9 */
 /***/ function(module, exports) {
 
 	/* Author:
@@ -967,103 +1150,6 @@
 	};
 	
 	module.exports = GameOfLife;
-
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	const Util = __webpack_require__(5);
-	const util = new Util ();
-	
-	function Exit(game, tutorial, distanceFromPlayer) {
-	  this.tutorial = tutorial;
-	  this.pos = util.randomPos(game.player.pos, distanceFromPlayer);
-	  if ((this.pos[0] > game.dimX - 60) || (this.pos[1] > game.dimY - 60)) {
-	    this.pos = util.randomPos(game.player.pos, distanceFromPlayer);
-	  }
-	}
-	
-	Exit.prototype.draw = function (ctx) {
-	  if (!this.tutorial) {
-	    ctx.fillStyle = 'red'
-	    ctx.fillRect(this.pos[0], this.pos[1], 60, 60)
-	  }
-	};
-	
-	module.exports = Exit;
-
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	const MovingObject = __webpack_require__(4);
-	const Util = __webpack_require__(5);
-	const util = new Util();
-	
-	const COLOR = "#ccffff";
-	let RADIUS = 20;
-	let VEL = [0,0];
-	
-	function Ghost(pos, game) {
-	  VEL = [0, 0]
-	  MovingObject.call(this, pos, VEL, RADIUS, COLOR, game);
-	  this.opacity = 0;
-	  this.flickering = true;
-	  this.direction = "increasing";
-	};
-	
-	util.inherits(MovingObject, Ghost)
-	
-	Ghost.prototype.findPlayer = function () {
-	  return player = this.game.player.pos
-	};
-	
-	Ghost.prototype.direct = function() {
-	  let player = this.findPlayer();
-	  let angle = Math.atan2((player[1] - this.pos[1]), player[0] - this.pos[0]);
-	  VEL[0] = Math.cos(angle)/4;
-	  VEL[1] = Math.sin(angle)/4;
-	};
-	
-	Ghost.prototype.move = function () {
-	  this.direct();
-	  this.pos[0] = this.pos[0] + VEL[0];
-	  this.pos[1] = this.pos[1] + VEL[1];
-	};
-	
-	Ghost.prototype.flicker = function (ctx, stepping) {
-	  let X = this.pos[0];
-	  let Y = this.pos[1];
-	  let gradient = ctx.createRadialGradient(X, Y, 0, X, Y, 50);
-	  gradient.addColorStop(0, `rgba(204,255,255,${this.opacity})`);
-	  gradient.addColorStop(1, "rgba(204,255,255,0)");
-	  ctx.save();
-	  ctx.fillStyle = gradient;
-	  ctx.fillRect(0,0,this.game.dimX, this.game.dimY)
-	  ctx.restore();
-	
-	  if (stepping) {
-	    this.flickering = true;
-	    this.direction = "increasing";
-	  }
-	  if (this.flickering) {
-	    if (this.direction === "increasing") {
-	      this.opacity += .01;
-	      if (this.opacity >= 1) {
-	        this.direction = "decreasing";
-	      }
-	    } else {
-	      this.opacity -= .01;
-	      if (this.opacity <= 0) {
-	        this.flickering = false;
-	      }
-	    }
-	  }
-	};
-	
-	module.exports = Ghost;
 
 
 /***/ }

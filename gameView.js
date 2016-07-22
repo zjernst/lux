@@ -16,12 +16,12 @@ GameView.prototype.tutorial = function(playerPos) {
   this.player = this.game.player;
 
   this.game.setup(this.ctx);
-  this.keyHandlers();
 
   tutorialMessages();
 
   // requestAnimationFrame(this.animate.bind(this));
   this.animate();
+  this.keyHandlers();
 };
 
 function tutorialMessages() {
@@ -84,11 +84,76 @@ function tutorialMessages() {
 };
 
 function clearTutorial() {
+  const newGame = document.getElementById("new-game");
+  const subtext = document.getElementById("sub-text");
+  const container = document.getElementById("box-wrapper")
+  const flash = document.getElementById("flashlight");
+  const terrain = document.getElementById("terrain");
+  const exit = document.getElementById("exit");
+  const ghost = document.getElementById("ghost");
+
+  newGame.className = "info gone";
+  subtext.className = "info gone";
+  container.className = "info gone";
+  flash.className = "info gone";
+  terrain.className = "info gone";
+  exit.className = "info gone";
+  ghost.className = "info gone";
+
   window.clearTimeout(flashlight);
   window.clearTimeout(terrainTimer);
   window.clearTimeout(exitTimer);
   window.clearTimeout(ghostTimer);
 };
+
+function gameTips() {
+  const alone = document.getElementById("alone");
+  const ghostOne = document.getElementById("ghost-one");
+  const ghostTwo = document.getElementById("ghost-two");
+  const container = document.getElementById("box-wrapper")
+  const infoWrapper = document.getElementById("info")
+
+  alone.className = "info gone";
+  ghostOne.className = "info gone";
+  ghostTwo.className = "info gone";
+  container.className = "box-wrapper gone";
+  infoWrapper.className = "info-wrapper center group gone"
+
+  if (score === 1) {
+    infoWrapper.className = "info-wrapper center group"
+    alone.className = "info";
+    container.className = "box-wrapper";
+    window.gameplayTimer = window.setTimeout(() => {
+      alone.className = "info gone";
+      container.className = "box-wrapper gone";
+      infoWrapper.className = "info-wrapper center group gone"
+    }, 7000);
+  } else if (score === 2) {
+    ghostOne.className = "info";
+    container.className = "box-wrapper";
+    infoWrapper.className = "info-wrapper center group"
+    window.gameplayTimer = window.setTimeout(() => {
+      ghostOne.className = "info gone";
+      container.className = "box-wrapper gone";
+      infoWrapper.className = "info-wrapper center group gone"
+    }, 7000);
+  } else if (score === 3) {
+    ghostTwo.className = "info";
+    container.className = "box-wrapper";
+    infoWrapper.className = "info-wrapper center group"
+    window.gameplayTimer = window.setTimeout(() => {
+      ghostTwo.className = "info gone";
+      container.className = "box-wrapper gone";
+      infoWrapper.className = "info-wrapper center group gone"
+    }, 7000);
+  }
+};
+
+// function clearGameTips() {
+//   if (window.gameplayTimer) {
+//     window.clearTimeout(gameplayTimer);
+//   }
+// }
 
 GameView.prototype.start = function(playerPos) {
   clearTutorial();
@@ -100,6 +165,8 @@ GameView.prototype.start = function(playerPos) {
   score += 1
 
   this.game.setup(this.ctx);
+  // clearGameTips();
+  gameTips();
 
   // requestAnimationFrame(this.animate.bind(this));
   this.animate();

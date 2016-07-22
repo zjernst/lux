@@ -22,6 +22,8 @@ can you survive?
 
 ### Vision
 
+- imitates layers through multiple draws with varying opacities
+
 ### Terrain
 
 ### Ghosts

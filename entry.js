@@ -16,18 +16,35 @@ const gameView = new GameView(ctx);
 
 const el = document.getElementsByTagName('body')[0];
 const infoEl = document.getElementById("info");
+const boxWrapper = document.getElementById('box-wrapper');
+let landingStage = true;
+const landing = document.getElementById('landing');
+const newGame = document.getElementById('new-game');
+const lostGame = document.getElementById('lost-game');
 
 key("space", () => {
-  // debugger
-  if (!gameView.inProgress) {
-    infoEl.className = "info-wrapper center group gone"
-		canvasEl.className = "visible fade-in"
-		// newGame.className = "info gone"
-		// toolTip.className = "gone"
+  if (landingStage) {
+    gameView.tutorial();
+    landing.className = "landing gone";
+    canvasEl.className = "visible fade-in";
+    newGame.className = "info";
+    boxWrapper.className = "box-wrapper";
+    landingStage = false;
+  } else if (!gameView.inProgress) {
+    infoEl.className = "info-wrapper center group gone";
+    lostGame.className = "info gone";
+    canvasEl.className = "visible fade-in";
+    // newGame.className = "info gone"
+    // toolTip.className = "gone"
     gameView.resetScore();
-		gameView.start();
+    gameView.start();
   }
+  // key("space", () => {
+  //   // debugger
+  //   if (!gameView.inProgress && !landing) {
+  //   }
+  // });
+  // landing = false;
 })
 
-gameView.tutorial();
 // gameView.start();

@@ -34,6 +34,7 @@ function Game(board, newGame, playerPos, ghosts, tutorial) {
   this.gameOver = false;
   window.setTimeout(() => {
     this.exit.tutorial = false;
+
   }, 40000)
 };
 
@@ -137,7 +138,8 @@ Game.prototype.win = function() {
   if (((this.player.pos[0] > this.exit.pos[0]) &&
     (this.player.pos[0] < this.exit.pos[0] + 60)) &&
    ((this.player.pos[1] > this.exit.pos[1]) &&
-    (this.player.pos[1] < this.exit.pos[1] + 60))) {
+    (this.player.pos[1] < this.exit.pos[1] + 60)) &&
+     (!this.exit.tutorial)) {
       this.player.vel = [0, 0];
       window.cancelAnimationFrame(window.animation);
       window.animation = undefined;

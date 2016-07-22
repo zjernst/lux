@@ -70,6 +70,14 @@ font-family: 'Nothing You Could Do', cursive;
   position: relative;
 }
 
+.landing {
+  color: white;
+  height: 100%;
+  width: 100%;
+  background: black;
+  padding-top: 5%;
+}
+
 .new-game-text {
   font-size: 50px;
 }
@@ -77,4 +85,22 @@ font-family: 'Nothing You Could Do', cursive;
 .new-game-para {
   font-size: 35px;
   margin: 0;
+}
+
+.image-container {
+  text-align: center;
+  height: 400px;
+  width: 600px;
+  display: block;
+  margin: auto;
+}
+
+.new-game-image {
+  display: block;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+  background-repeat: no-repeat;
+  background-image: url('https://res.cloudinary.com/soundscape/image/upload/v1469205381/Screen_Shot_2016-07-15_at_12.11.11_PM_aayovy.jpg');
+
 }
