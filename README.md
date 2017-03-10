@@ -1,5 +1,5 @@
 #[LUX IN TENEBRIS][link]
-[link]: http://zjernst.github.io
+[link]: http://zjernst.github.io/lux
 
 A browser based JavaScript employing the Canvas library
 
